@@ -3,7 +3,7 @@ OBJ_DIR=./obj
 BIN_DIR=./bin
 DEBUG_DIR=$(BIN_DIR)/debug
 RELEASE_DIR=$(BIN_DIR)/release
-INCLUDE_DIR=./include
+INCLUDE_DIRS=./include
 LIB_DIR=./lib
 
 EXTENSION=.c .cpp .cc 
@@ -18,11 +18,12 @@ $(shell mkdir -p ${RELEASE_DIR})
 #=============================================================
 
 
-
+PUBLIC_HEADERS= IRLog.h 
 
 CC=g++ 
-CFLAGS=-g -Wall -O2 -I$(INCLUDE_DIR)
-CPPFLAGS=-g -Wall -O2 -I$(INCLUDE_DIR) -include IRLog.h 
+INCLUDE_FLAG=$(foreach in, ${INCLUDE_DIRS}, -I${in})
+CFLAGS=-g -Wall -O2 $(INCLUDE_FLAG)
+CPPFLAGS=-g -Wall -O2 $(INCLUDE_FLAG) $(foreach h, ${PUBLIC_HEADERS}, -include ${h})
 LDFLAG=-L$(LIB_DIR)
 
 TARGET=work.o

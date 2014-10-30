@@ -7,6 +7,6 @@ int main()
 	L("asd");
 //	FLOG("%d", 1);
 //	FL("asd");
-	LERR("%s", "aaaa");
+	LE("a1aaa");
 	return 0;
 }

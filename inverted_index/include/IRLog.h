@@ -11,6 +11,8 @@
 //LOG(fmt, args...)  同printf 
 //L(s) 同puts
 //LERR(fmt, args...) 同printf 输出错误
+//FUNC_START  进入函数时可以用这个宏，该宏可以用于查看函数是否被正常调用
+//FUNC_END 函数调用结束时可以用这个宏，该宏可以用于长看函数是否正常结束
 
 
 #define LEN 30
@@ -82,7 +84,11 @@
 		printf("ERR!!! [%s:%d %s] "fmt"\n", __FILE__, __LINE__, __FUNCTION__, ##args); \
 		FERR(fmt, ##args); \
 	}
+	#define LE(s) LERR("%s", s)
 #else
 	#define LERR(fmt, args...) FERR(fmt, ##args)
+	#define LE(s) FERR("%s", s)
 #endif
 
+#define FUNC_START L("function start")
+#define FUNC_END L("function end")
