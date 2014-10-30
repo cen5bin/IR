@@ -15,13 +15,20 @@ $(shell mkdir -p ${OBJ_DIR})
 $(shell mkdir -p ${DEBUG_DIR})
 $(shell mkdir -p ${RELEASE_DIR})
 
+#=============================================================
+
+
+
+
 CC=g++ 
 CFLAGS=-g -Wall -O2 -I$(INCLUDE_DIR)
-CPPFLAGS=-g -Wall -O2 -I$(INCLUDE_DIR)
+CPPFLAGS=-g -Wall -O2 -I$(INCLUDE_DIR) -include IRLog.h 
 LDFLAG=-L$(LIB_DIR)
 
 TARGET=work.o
 TARGET_LIB=inverted_index.a
+
+#=============================================================
 
 edit : $(OBJECTS)
 	@echo sources: $(SOURCE_FILES)

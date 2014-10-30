@@ -13,28 +13,23 @@
 //LERR(fmt, args...) 同printf 输出错误
 
 
-
-
-const int LEN = 500;
-const int FILENAME_LEN = 1000;
-static char timebuf[LEN];
-static char logfilename[FILENAME_LEN];
-static char errfilename[FILENAME_LEN];
-static time_t t;
-struct tm *newtime;
+#define LEN 30
+#define FILENAME_LEN 100
 
 #define PRE_FLOG \
+	time_t t; \
+	struct tm* newtime; \
+	char timebuf[LEN]; \
+	char logfilename[LEN]; \
 	time(&t);  \
 	newtime = localtime(&t); \
 	strftime(timebuf, LEN, "%F %T", newtime); \
 	strftime(logfilename, FILENAME_LEN, LOG_PATH"%Y%m%d%H.log", newtime); \
 
 #define PRE_FERR \
-	time(&t);  \
-	newtime = localtime(&t); \
-	strftime(timebuf, LEN, "%F %T", newtime); \
+	PRE_FLOG; \
+	char errfilename[FILENAME_LEN]; \
 	strftime(errfilename, FILENAME_LEN, ERR_PATH"%Y%m%d%H.err", newtime); \
-	strftime(logfilename, FILENAME_LEN, LOG_PATH"%Y%m%d%H.log", newtime); \
 
 #if defined(IR_DEBUG) || defined(IR_LOG)
 	#define FLOG(fmt, args...) { \
@@ -90,3 +85,4 @@ struct tm *newtime;
 #else
 	#define LERR(fmt, args...) FERR(fmt, ##args)
 #endif
+

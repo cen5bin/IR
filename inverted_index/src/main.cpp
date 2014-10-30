@@ -1,6 +1,5 @@
 #include <cstdio>
 #include <cstring>
-#include "IRLog.h"
 
 unsigned char s[100];
 int main()
