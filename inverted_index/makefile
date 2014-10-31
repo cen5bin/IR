@@ -10,6 +10,7 @@ EXTENSION=.c .cpp .cc
 
 SOURCE_FILES=$(foreach ex, ${EXTENSION}, $(wildcard ${SRC_DIR}/*${ex}))
 OBJECTS=$(foreach ex, ${EXTENSION}, $(patsubst %${ex}, ${OBJ_DIR}/%.o, $(filter %${ex}, $(notdir ${SOURCE_FILES}))))
+LIBS=$(patsubst lib%.a, %, $(notdir $(wildcard ${LIB_DIR}/*.a)))
 
 $(shell mkdir -p ${OBJ_DIR})
 $(shell mkdir -p ${DEBUG_DIR})
@@ -24,7 +25,7 @@ CC=g++
 INCLUDE_FLAG=$(foreach in, ${INCLUDE_DIRS}, -I${in})
 CFLAGS=-g -Wall -O2 $(INCLUDE_FLAG)
 CPPFLAGS=-g -Wall -O2 $(INCLUDE_FLAG) $(foreach h, ${PUBLIC_HEADERS}, -include ${h})
-LDFLAG=-L$(LIB_DIR)
+LDFLAG= $(foreach lib, ${LIBS}, -l${lib}) -L$(LIB_DIR)
 
 TARGET=work.o
 TARGET_LIB=inverted_index.a
