@@ -1,3 +1,6 @@
+/**
+  将词典写入文档
+*/
 #pragma once
 #include "Trie.h"
 class TermTool

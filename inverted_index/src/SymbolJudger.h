@@ -1,3 +1,6 @@
+/**
+  用来判断标点符号
+*/
 #pragma once
 #include "Trie.h"
 class SymbolJudger
