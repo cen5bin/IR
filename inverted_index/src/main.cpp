@@ -7,7 +7,7 @@ unsigned char s[100];
 int main()
 {
 	SymbolJudger sj(300);
-	if (!sj.loadSymbols("../data/symbol.txt"))
+	if (!sj.loadSymbols("./data/symbol.txt"))
 	{
 		LE("loadSymbols error");
 		return 0;

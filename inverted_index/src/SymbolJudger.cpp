@@ -22,7 +22,9 @@ bool SymbolJudger::loadSymbols(char *filename)
 	char s[LEN];
 	while (fgets(s, LEN, fp))
 	{
-		bool ret = trie->insert(s, strlen(s), 1);
+		int len = strlen(s);
+		s[--len] = '\0';
+		bool ret = trie->insert(s, len, 1);
 		if (!ret) return 0;
 	}
 	return 1;
