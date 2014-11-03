@@ -4,7 +4,21 @@
 #define MAX_LINE_LEN 10000
 #define MAX_TERM_LEN 200
 
-bool FileScanner::scanFile(char *filename)
+#define MAX_DICTIONARY_SIZE 500000
+
+FileScanner::~FileScanner()
+{ 
+	if (m_sj) delete m_sj; 
+	if (m_dict) delete m_dict;
+}
+FileScanner::FileScanner()
+{ 
+	FUNC_START;
+	m_sj = new SymbolJudger();
+	m_dict = new Dictionary(MAX_DICTIONARY_SIZE);
+	FUNC_END;
+}
+bool FileScanner::scanFile(const char *filename)
 {
 	char s[MAX_LINE_LEN];
 	FILE *fp = fopen(filename, "r");
@@ -28,7 +42,8 @@ bool FileScanner::scanFile(char *filename)
 					if (!m_sj->judge(tmp, cnt) && tmp[0] != ' ')
 					{
 						pos++;
-						LOG("%d %s", pos, tmp);
+						int termID = m_dict->getTermID(tmp, cnt);
+						LOG("%d %s %d", pos, tmp, termID);
 					}
 				}
 				cnt = 0;
@@ -44,4 +59,9 @@ bool FileScanner::scanFile(char *filename)
 	}
 	fclose(fp);
 	return 0;
+}
+
+bool FileScanner::finish()
+{
+	return m_dict->writeToFile(DICT_FILENAME);
 }

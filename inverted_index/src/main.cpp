@@ -4,14 +4,21 @@
 #include "SymbolJudger.h"
 #include "IRDefine.h"
 #include "FileScanner.h"
+#include <cstdlib>
 
 unsigned char s[100];
 int main(int argc, char *args[])
 {
+	system("mkdir -p "DICT_PATH);
 	if (argc == 1)
 	{
 		FileScanner fs;
 		fs.scanFile(SPORTS_DOC_PATH"sport10.txt");
+		fs.scanFile(SPORTS_DOC_PATH"sport11.txt");
+		fs.scanFile(SPORTS_DOC_PATH"sport1.txt");
+		fs.scanFile(SPORTS_DOC_PATH"sport2.txt");
+		fs.scanFile(SPORTS_DOC_PATH"sport3.txt");
+		fs.finish();
 
 		Trie trie(10000);
 		char *s1 = "岑武斌";

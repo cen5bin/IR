@@ -14,6 +14,8 @@
 //L(fmt, args...) 同法同puts，输出log
 //LERR(fmt, args...) 用法同printf，输出err
 //LE(fmt, args...) 用法同puts，输出err
+//FUNC_START 函数刚开始
+//FUNC_END 函数结束
 
 
 
@@ -32,6 +34,9 @@
 	#define LERR(fmt, args...) NULL
 	#define LE(s) NULL
 #endif
+
+#define FUNC_START L("start")
+#define FUNC_END L("end")
 
 extern void _REAL_LOG_(const char *fmt,  ...);
 extern void _REAL_LERR_(const char *fmt, ...);

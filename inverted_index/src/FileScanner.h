@@ -1,12 +1,15 @@
 #pragma once
 #include "SymbolJudger.h"
+#include "Dictionary.h"
 
 class FileScanner
 {
 	private:
 		SymbolJudger *m_sj;
+		Dictionary *m_dict;
 	public:
-		~FileScanner(){ if (m_sj) delete m_sj; }
-		FileScanner(){ m_sj = new SymbolJudger(); }
-		bool scanFile(char *filename);
+		~FileScanner();
+		FileScanner();
+		bool scanFile(const char *filename);
+		bool finish();
 };
