@@ -1,10 +1,18 @@
 #include "SymbolJudger.h"
 #include <cstdio>
 #include <cstring>
+#include "IRDefine.h"
 
 const int LEN = 10;
 
-bool SymbolJudger::loadSymbols(char *filename)
+SymbolJudger::SymbolJudger()
+{
+	m_loaded = 0;
+	trie = new Trie(300);
+	this->loadSymbols(SYMBOL_FILE);
+}
+
+bool SymbolJudger::loadSymbols(const char *filename)
 {
 	if (m_loaded) return 1;
 	m_loaded = 1;

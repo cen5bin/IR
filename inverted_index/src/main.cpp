@@ -2,27 +2,16 @@
 #include <cstring>
 #include "Trie.h"
 #include "SymbolJudger.h"
+#include "IRDefine.h"
+#include "FileScanner.h"
 
 unsigned char s[100];
 int main(int argc, char *args[])
 {
-	if (argc == 0)
+	if (argc == 1)
 	{
-		SymbolJudger sj(300);
-		if (!sj.loadSymbols("./data/symbol.txt"))
-		{
-			LE("loadSymbols error");
-			return 0;
-		}
-		char *s0 = ",";
-		if (sj.judge(s0, strlen(s0))) L("yes");
-		else L("no");
-		s0 = ".";
-		if (sj.judge(s0, strlen(s0))) L("yes");
-		else L("no");
-		s0 = "。";
-		if (sj.judge(s0, strlen(s0))) L("yes");
-		else L("no");
+		FileScanner fs;
+		fs.scanFile(SPORTS_DOC_PATH"sport10.txt");
 
 		Trie trie(10000);
 		char *s1 = "岑武斌";

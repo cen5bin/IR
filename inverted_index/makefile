@@ -32,11 +32,22 @@ TARGET_LIB=inverted_index.a
 
 #=============================================================
 
-edit : $(OBJECTS)
+all : main
+#	echo "aa"
+main : $(OBJECTS)
 	@echo sources: $(SOURCE_FILES)
 	$(CC) $(CPPFLAGS) $(OBJECTS) -o  $(TARGET) $(LDFLAG)
 	ar rvl $(TARGET_LIB) $(OBJECTS)
 	cp $(TARGET_LIB) $(RELEASE_DIR)/
+
+
+#$(OBJ_DIR)/%.d : $(SRC_DIR)/%.cpp
+#	echo $<
+#	rm -f $@; 
+#	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; 
+#sed 's,/$@.o[ :]*,/1.o $@ : ,g' < $@.$$$$ > $@; 
+#rm -f $@.$$$$
+#sinclude $(OBJECTS:.o=.d)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
 	$(CC) -c $(CPPFLAGS) $< -o $@ $(LDFLAG)
@@ -49,4 +60,4 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJECTS) $(RELEASE_DIR)/* $(DEBUG_DIR)/*  *.a *.out *.o
+	rm -rf $(OBJECTS) $(RELEASE_DIR)/* $(DEBUG_DIR)/*  *.a *.out *.o $(OBJ_DIR)/*.d
