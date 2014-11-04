@@ -9,6 +9,8 @@
 unsigned char s[100];
 int main(int argc, char *args[])
 {
+	printf("%d\n", XXX);
+	return 0;
 	system("mkdir -p "DICT_PATH);
 	if (argc == 1)
 	{

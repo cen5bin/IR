@@ -10,6 +10,7 @@ EXTENSION=.c .cpp .cc
 
 SOURCE_FILES=$(foreach ex, ${EXTENSION}, $(wildcard ${SRC_DIR}/*${ex}))
 OBJECTS=$(foreach ex, ${EXTENSION}, $(patsubst %${ex}, ${OBJ_DIR}/%.o, $(filter %${ex}, $(notdir ${SOURCE_FILES}))))
+OBJS=$(foreach obj, ${OBJECTS}, $(notdir ${obj}))
 LIBS=$(patsubst lib%.a, %, $(notdir $(wildcard ${LIB_DIR}/*.a)))
 
 $(shell mkdir -p ${OBJ_DIR})
@@ -33,30 +34,28 @@ TARGET_LIB=inverted_index.a
 #=============================================================
 
 all : main
-#	echo "aa"
 main : $(OBJECTS)
-	@echo sources: $(SOURCE_FILES)
 	$(CC) $(CPPFLAGS) $(OBJECTS) -o  $(TARGET) $(LDFLAG)
 	ar rvl $(TARGET_LIB) $(OBJECTS)
 	cp $(TARGET_LIB) $(RELEASE_DIR)/
 
 
-#$(OBJ_DIR)/%.d : $(SRC_DIR)/%.cpp
-#	echo $<
-#	rm -f $@; 
-#	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; 
-#sed 's,/$@.o[ :]*,/1.o $@ : ,g' < $@.$$$$ > $@; 
-#rm -f $@.$$$$
-#sinclude $(OBJECTS:.o=.d)
+$(OBJ_DIR)/%.d : $(SRC_DIR)/%.cpp
+	rm -f $@
+	echo -n $(OBJ_DIR)/ > $@; \
+	$(CC) -MM $(CPPFLAGS) $< >> $@; \
+	echo "\t" $(CC) -c $(CPPFLAGS) $< -o $(@:.d=.o) $(LDFLAG) >> $@
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
-	$(CC) -c $(CPPFLAGS) $< -o $@ $(LDFLAG)
+include $(OBJECTS:.o=.d)
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cc
-	$(CC) -c $(CPPFLAGS) $< -o $@ $(LDFLAG)
+#$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
+#	$(CC) -c $(CPPFLAGS) $< -o $@ $(LDFLAG)
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
-	$(CC) -c $(CFLAGS) $< -o $@ $(LDFLAG)
+#$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cc
+#	$(CC) -c $(CPPFLAGS) $< -o $@ $(LDFLAG)
+
+#$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
+#	$(CC) -c $(CFLAGS) $< -o $@ $(LDFLAG)
 
 .PHONY: clean
 clean:
