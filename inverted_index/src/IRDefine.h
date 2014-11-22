@@ -1,6 +1,6 @@
 #pragma once
 
-#define XXX 1
+#define XXX 2
 
 #define DATA_PATH "./data/" //数据的根目录
 #define IR_RUNTIME_DATA DATA_PATH"runtime/" //运行时相关的文件所在目录
