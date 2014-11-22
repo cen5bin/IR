@@ -1,5 +1,5 @@
 #include "MurmurHash2.h"
-uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed=0xEE6B27EB )
+uint32_t MurmurHash2 ( const void * key, int len, uint32_t seed )
 {
   // 'm' and 'r' are mixing constants generated offline.
   // They're not really 'magic', they just happen to work well.

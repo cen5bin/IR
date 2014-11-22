@@ -5,15 +5,15 @@
 #include "IRDefine.h"
 #include "FileScanner.h"
 #include <cstdlib>
+#include "HashTable.h"
 
 unsigned char s[100];
 int main(int argc, char *args[])
 {
-	printf("%d\n", XXX);
-	return 0;
 	system("mkdir -p "DICT_PATH);
 	if (argc == 1)
 	{
+		HashTable hashtable(1000000);
 		FileScanner fs;
 		fs.scanFile(SPORTS_DOC_PATH"sport10.txt");
 		fs.scanFile(SPORTS_DOC_PATH"sport11.txt");
@@ -24,9 +24,16 @@ int main(int argc, char *args[])
 
 		Trie trie(10000);
 		char *s1 = "岑武斌";
+		hashtable.insert(s1, strlen(s1), 1);
+		LOG("hash %d", hashtable.query(s1, strlen(s1)));
+		
+
 		trie.insert(s1, strlen(s1), 1);
 		char *s2 = "asdadas";
 		trie.insert(s2, strlen(s2), 2);
+		hashtable.insert(s2, strlen(s2), 2);
+		LOG("hash %d", hashtable.query(s2, strlen(s2)));
+
 
 		LOG("%d %d %d", trie.query("asd", 3), trie.query(s1, strlen(s1)), trie.query(s2, strlen(s2)));
 		while (gets((char *)s))
