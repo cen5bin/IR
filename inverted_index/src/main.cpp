@@ -6,11 +6,13 @@
 #include "FileScanner.h"
 #include <cstdlib>
 #include "HashTable.h"
+#include "PreProcess.h"
 
 unsigned char s[100];
 int main(int argc, char *args[])
 {
 	system("mkdir -p "DICT_PATH);
+	system("mkdir -p "IR_RUNTIME_TMP);
 	if (argc == 1)
 	{
 		HashTable hashtable(1000000);
@@ -45,6 +47,7 @@ int main(int argc, char *args[])
 	}
 	else if (strncmp(args[1], "-t", 2) == 0)
 	{
+		getTidAndDocID(SPORTS_DOC_PATH);
 		L("处理<词项ID，docID>对");
 	}
 	else if (strncmp(args[1], "-s", 2) == 0)

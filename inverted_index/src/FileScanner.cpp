@@ -6,20 +6,35 @@
 
 #define MAX_DICTIONARY_SIZE 500000
 
+#define MAX_ITEM_COUNT 100
+
 FileScanner::~FileScanner()
 { 
 	if (m_sj) delete m_sj; 
 	if (m_dict) delete m_dict;
 }
+void FileScanner::openTmpFile()
+{
+	static char tmp[256];
+	m_cnt = 0;
+	if (m_fp) fclose(m_fp);
+	snprintf(tmp, sizeof(tmp), "%s%d.tmp", IR_RUNTIME_TMP, ++m_flag);
+	m_fp = fopen(tmp, "w");
+}
 FileScanner::FileScanner()
 { 
 	FUNC_START;
+	m_docID = m_cnt = m_flag = 0;
+	m_fp = NULL;
+	m_fp0 = fopen(DOCIDMAP_FILE, "w");
+	this->openTmpFile();
 	m_sj = new SymbolJudger();
 	m_dict = new Dictionary(MAX_DICTIONARY_SIZE);
 	FUNC_END;
 }
 bool FileScanner::scanFile(const char *filename)
 {
+	fprintf(m_fp0, "%s %d\n", filename, ++m_docID);
 	char s[MAX_LINE_LEN];
 	FILE *fp = fopen(filename, "r");
 	if (!fp)
@@ -43,7 +58,11 @@ bool FileScanner::scanFile(const char *filename)
 					{
 						pos++;
 						int termID = m_dict->getTermID(tmp, cnt);
+						m_cnt++;
+						this->write(termID, m_docID);
 						LOG("%d %s %d", pos, tmp, termID);
+						if (m_cnt == MAX_ITEM_COUNT)
+							this->openTmpFile();
 					}
 				}
 				cnt = 0;
@@ -58,10 +77,18 @@ bool FileScanner::scanFile(const char *filename)
 		}	
 	}
 	fclose(fp);
-	return 0;
+	return 1;
 }
+
+bool FileScanner::write(int tid, int docID)
+{
+	fprintf(m_fp, "%d %d\n", tid, docID);	
+}
+
 
 bool FileScanner::finish()
 {
+	fclose(m_fp0);
+	fclose(m_fp);
 	return m_dict->writeToFile(DICT_FILENAME);
 }
