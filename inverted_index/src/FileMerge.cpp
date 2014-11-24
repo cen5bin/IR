@@ -157,13 +157,15 @@ void FileMerge::secondMergeRealWork(FILE *fp[], int kk, FILE *fp0)
 			{
 				int tid, docid;
 				int ret = fscanf(fp[p1.id], "%d %d", &tid, &docid);
-				if (ret == 0)
+				if (ret != 2)
 				{
 					end[p1.id] = 1;
 					break;
 				}
 				p2[p1.id].push_back(point1(point(tid, docid), p1.id));
 			}
+			if (cnt[p1.id] < p2[p1.id].size())
+				q.push(p2[p1.id][cnt[p1.id]++]);
 		}
 	}
 }
