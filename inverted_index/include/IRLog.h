@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <time.h>
 
-//#define _DEBUG_ //在控制台输出log信息
+#define _DEBUG_ //在控制台输出log信息
 //#define _DEBUG_ERR_ //在控制台输出err信息
 //#define _LOG_ //在文件输出log信息
 //#define _ERR_ //在文件输出err信息

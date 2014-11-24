@@ -19,3 +19,5 @@
 
 ///////////各种常量/////////
 #define ERROR -1
+#define MAX_ITEM_COUNT 100 //每个临时文件中tid，docid的对数
+#define MAX_FILENAME_LEN 256 //文件名最长长度

@@ -6,7 +6,6 @@
 
 #define MAX_DICTIONARY_SIZE 500000
 
-#define MAX_ITEM_COUNT 100
 
 FileScanner::~FileScanner()
 { 
@@ -15,7 +14,7 @@ FileScanner::~FileScanner()
 }
 void FileScanner::openTmpFile()
 {
-	static char tmp[256];
+	static char tmp[MAX_FILENAME_LEN];
 	m_cnt = 0;
 	if (m_fp) fclose(m_fp);
 	snprintf(tmp, sizeof(tmp), "%s%d.tmp", IR_RUNTIME_TMP, ++m_flag);
@@ -60,7 +59,7 @@ bool FileScanner::scanFile(const char *filename)
 						int termID = m_dict->getTermID(tmp, cnt);
 						m_cnt++;
 						this->write(termID, m_docID);
-						LOG("%d %s %d", pos, tmp, termID);
+						//LOG("%d %s %d", pos, tmp, termID);
 						if (m_cnt == MAX_ITEM_COUNT)
 							this->openTmpFile();
 					}

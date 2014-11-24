@@ -52,7 +52,9 @@ int main(int argc, char *args[])
 	}
 	else if (strncmp(args[1], "-s", 2) == 0)
 	{
+		mergeTidAndDocID(IR_RUNTIME_TMP);
 		L("排序");
+
 	}
 	else if (strncmp(args[1], "-m", 2) == 0)
 	{
