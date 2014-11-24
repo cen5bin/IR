@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstring>
 #include <queue>
+#include <cstdlib>
 
 struct point
 {
@@ -30,6 +31,7 @@ std::priority_queue<point1, std::vector<point1>, std::greater<point1> > q;
 std::vector<point> p;
 std::vector<point1> p2[10];
 char filename[MAX_FILENAME_LEN];
+char command[MAX_FILENAME_LEN * 2 + 10];
 
 bool FileMerge::firstMerge()
 {
@@ -105,6 +107,11 @@ bool FileMerge::secondMerge()
 	//	LOG("%d", cnt);
 		if (!yes) break;
 	}
+	prefix[cnt] = '\0';
+	this->getFilename(prefix, 1);
+	L(m_filename);
+	sprintf(command, "cp %s %s", m_filename, SORTED_FILE);
+	system(command);
 	return 1;
 }
 

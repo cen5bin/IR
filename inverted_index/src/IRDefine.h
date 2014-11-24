@@ -6,6 +6,7 @@
 #define IR_RUNTIME_DATA DATA_PATH"runtime/" //运行时相关的文件所在目录
 #define IR_RUNTIME_TMP IR_RUNTIME_DATA"tmp/" //临时目录
 #define DOCIDMAP_FILE IR_RUNTIME_DATA"map" //docID 和文件名的映射
+#define SORTED_FILE IR_RUNTIME_DATA"sorted.tmp" //docID tid最终排序文件
 
 #define DICT_PATH IR_RUNTIME_DATA"dict/" //词典路径
 #define DICT_FILENAME DICT_PATH"IR.dict" //词典文件名
