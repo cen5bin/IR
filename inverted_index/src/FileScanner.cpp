@@ -1,5 +1,6 @@
 #include "FileScanner.h"
 #include "IRDefine.h"
+#include "StatisticInfo.h"
 
 #define MAX_LINE_LEN 10000
 #define MAX_TERM_LEN 200
@@ -87,6 +88,10 @@ bool FileScanner::write(int tid, int docID)
 
 bool FileScanner::finish()
 {
+	StatisticInfo si(STATISTIC_FILE_PATH);
+	char value[40];
+	sprintf(value, "%d", m_docID);
+	si.write((void*)STATISTIC_KEY_DOCNUM, strlen(STATISTIC_KEY_DOCNUM), (void*)value, strlen(value));
 	fclose(m_fp0);
 	fclose(m_fp);
 	return m_dict->writeToFile(DICT_FILENAME);

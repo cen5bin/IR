@@ -49,9 +49,10 @@ int main(int argc, char *args[])
 	else if (strncmp(args[1], "-x", 2) == 0)
 	{
 		StatisticInfo si(STATISTIC_FILE_PATH);
-		si.write((void *)"asd0", 4, (void *)"arrsa2", 6);
+		//si.write((void *)"asd0", 4, (void *)"arrsa2", 6);
 		char value[100];
-		if (si.read((void *)"asd0", 4, (void *)value, 100) )
+		if (si.read(STATISTIC_KEY_DOCNUM, value))
+		//if (si.read((void *)STATISTIC_KEY_DOCNUM, strlen(STATISTIC_KEY_DOCNUM), (void *)value, 100) )
 		puts(value);
 		else puts("no");
 	}

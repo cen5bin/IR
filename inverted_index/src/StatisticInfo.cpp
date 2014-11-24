@@ -22,10 +22,6 @@ bool StatisticInfo::write(void *key, int key_len, void *value, int value_len)
 	while (fread(buffer, BUFFER_SIZE, 1, fp))
 	{
 		cnt++;
-		puts("------");
-		puts((char *)key);
-		puts(buffer);
-		puts("------");
 		if (strncmp((char *)key, buffer, key_len) == 0)
 		{
 			fseek(fp, -BUFFER_SIZE, SEEK_CUR);
@@ -55,8 +51,6 @@ bool StatisticInfo::read(void *key, int key_len, void *value, int value_len)
 	if (fp == NULL) return 0;
 	while (fread(buffer, BUFFER_SIZE, 1, fp))
 	{
-		puts(buffer);
-		puts((char *)key);
 		if (strncmp((char *)key, buffer, key_len) == 0 && strlen(buffer) == key_len)
 		{
 			strncpy((char *)value, buffer+key_len + 1, value_len);
@@ -66,4 +60,14 @@ bool StatisticInfo::read(void *key, int key_len, void *value, int value_len)
 	}
 	fclose(fp);
 	return 0;
+}
+
+bool StatisticInfo::write(char *key, char *value)
+{
+	return this->write((void *)key, strlen(key), (void *)value, strlen(value));
+}
+
+bool StatisticInfo::read(char *key, char *value)
+{
+	return this->read((void *)key, strlen(key), (void *)value, sizeof(value));
 }
