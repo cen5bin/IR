@@ -13,6 +13,8 @@
 
 #define SPORTS_DOC_PATH DATA_PATH"sport/" //体育新闻文档路径
 
+#define STATISTIC_FILE_PATH DATA_PATH"statistic.txt" //系统数据的统计信息
+
 #define SYMBOL_FILE DATA_PATH"symbol.txt" //标点符号文件
 #define TERM_SPLIT_SYMBOL '|' // 分词的分割符
 

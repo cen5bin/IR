@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include "HashTable.h"
 #include "PreProcess.h"
+#include "StatisticInfo.h"
 
 unsigned char s[100];
 int main(int argc, char *args[])
@@ -44,6 +45,15 @@ int main(int argc, char *args[])
 			puts("");
 			puts((char *)s);
 		}
+	}
+	else if (strncmp(args[1], "-x", 2) == 0)
+	{
+		StatisticInfo si(STATISTIC_FILE_PATH);
+		si.write((void *)"asd0", 4, (void *)"arrsa2", 6);
+		char value[100];
+		if (si.read((void *)"asd0", 4, (void *)value, 100) )
+		puts(value);
+		else puts("no");
 	}
 	else if (strncmp(args[1], "-t", 2) == 0)
 	{
