@@ -40,3 +40,8 @@ bool Dictionary::writeToFile(const char *filename)
 	fclose(fp);
 	return 1;
 }
+
+int Dictionary::getTermCount()
+{
+	return m_cnt;
+}

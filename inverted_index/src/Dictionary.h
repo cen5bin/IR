@@ -7,7 +7,7 @@ class Dictionary
 {
 	private:
 		Trie *m_trie;
-		int m_cnt;
+		int m_cnt; //词项数量
 		std::vector<std::string> m_termVec;
 	public:
 		//Dictionary(){ m_cnt = 0; }
@@ -17,4 +17,5 @@ class Dictionary
 		int getTermID(char *s, int n); //查询词项ID，如果不存在，这为这个词项生成一个新的ID
 		int queryTermID(char *s, int n); //单纯的查询词项ID，如果不存在则直接返回-1
 		bool writeToFile(const char *filename); //将整个词典写到文件中去
+		int getTermCount();
 };

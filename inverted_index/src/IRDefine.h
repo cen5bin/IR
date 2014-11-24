@@ -15,6 +15,7 @@
 
 #define STATISTIC_FILE_PATH DATA_PATH"statistic.txt" //系统数据的统计信息
 #define STATISTIC_KEY_DOCNUM "docnum"  //文档总数量
+#define STATISTIC_KET_TERMNUM "termnum" //词项数量
 
 #define SYMBOL_FILE DATA_PATH"symbol.txt" //标点符号文件
 #define TERM_SPLIT_SYMBOL '|' // 分词的分割符
@@ -23,5 +24,6 @@
 
 ///////////各种常量/////////
 #define ERROR -1
-#define MAX_ITEM_COUNT 100 //每个临时文件中tid，docid的对数
+#define MAX_ITEM_COUNT 1000 //每个临时文件中tid，docid的对数
+#define MAX_VEC_COUNT 1000 //每个临时文件中的正排记录的个数
 #define MAX_FILENAME_LEN 256 //文件名最长长度

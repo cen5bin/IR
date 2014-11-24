@@ -5,7 +5,7 @@
 
 void InvertedIndexMaker::statistic(char *filename)
 {
-	FILE *fp = fopen(DOCIDMAP_FILE, "r");
+	FILE *fp = fopen(filename, "r");
 	if (!fp) return;
 
 
