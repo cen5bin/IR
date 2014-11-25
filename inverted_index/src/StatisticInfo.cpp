@@ -5,6 +5,10 @@
 #define BUFFER_SIZE 128
 #define KET_SIZE 64
 #define VALUE_SIZE (BUFFER_SIZE - KET_SIZE)
+StatisticInfo::StatisticInfo()
+{
+	strcpy(m_filename, STATISTIC_FILE_PATH);
+}
 StatisticInfo::StatisticInfo(char *filename)
 {
 	strcpy(m_filename, filename);
@@ -62,12 +66,12 @@ bool StatisticInfo::read(void *key, int key_len, void *value, int value_len)
 	return 0;
 }
 
-bool StatisticInfo::write(char *key, char *value)
+bool StatisticInfo::write(const char *key, char *value)
 {
 	return this->write((void *)key, strlen(key), (void *)value, strlen(value));
 }
 
-bool StatisticInfo::read(char *key, char *value)
+bool StatisticInfo::read(const char *key, char *value, int len)
 {
-	return this->read((void *)key, strlen(key), (void *)value, sizeof(value));
+	return this->read((void *)key, strlen(key), (void *)value, len);
 }

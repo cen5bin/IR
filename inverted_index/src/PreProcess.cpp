@@ -8,6 +8,7 @@
 #include <string>
 #include <algorithm>
 #include "FileMerge.h"
+#include "IndexMaker.h"
 
 std::vector<std::string> filenames;
 
@@ -25,7 +26,7 @@ bool dfs_path(char *pathname, FileScanner *fs) //递归数据文件路径，将�
 	{
 		DIR *dir = opendir(pathname);
 		struct dirent *dd;
-		while (dd = readdir(dir))
+		while ((dd = readdir(dir)) != NULL)
 		{
 			if (strcmp(dd->d_name, ".") == 0 || strcmp(dd->d_name, "..") == 0) continue;
 			static char tmp[256];
@@ -62,5 +63,12 @@ bool mergeTidAndDocID(char *dataRoot)
 	FileMerge fm(dataRoot);	
 	fm.firstMerge();
 	fm.secondMerge();
+	return 1;
+}
+
+bool makeIndex(char *postIndexPath)
+{
+	IndexMaker im;
+	im.makePostIndex(postIndexPath);
 	return 1;
 }

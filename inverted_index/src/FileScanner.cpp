@@ -66,7 +66,7 @@ bool FileScanner::scanFile(const char *filename)
 				if (cnt)
 				{
 					tmp[cnt] = '\0';
-					if (!m_sj->judge(tmp, cnt) && tmp[0] != ' ' & tmp[0] != '\n')
+					if (!m_sj->judge(tmp, cnt) && tmp[0] != ' ' && tmp[0] != '\n' && tmp[0] != '\r')
 					{
 						pos++;
 						int termID = m_dict->getTermID(tmp, cnt);
@@ -100,17 +100,18 @@ bool FileScanner::scanFile(const char *filename)
 bool FileScanner::write(int tid, int docID)
 {
 	fprintf(m_fp, "%d %d\n", tid, docID);	
+	return 1;
 }
 
 
 bool FileScanner::finish()
 {
-	StatisticInfo si(STATISTIC_FILE_PATH);
+	StatisticInfo si((char *)STATISTIC_FILE_PATH);
 	char value[128];
 	sprintf(value, "%d", m_docID);
 	si.write((void*)STATISTIC_KEY_DOCNUM, strlen(STATISTIC_KEY_DOCNUM), (void*)value, strlen(value));
 	sprintf(value, "%d", m_dict->getTermCount());
-	si.write(STATISTIC_KET_TERMNUM, value);
+	si.write((char *)STATISTIC_KET_TERMNUM, value);
 	fclose(m_fp0);
 	fclose(m_fp);
 	fclose(m_fp1);

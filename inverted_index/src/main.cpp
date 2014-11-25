@@ -8,6 +8,7 @@
 #include "HashTable.h"
 #include "PreProcess.h"
 #include "StatisticInfo.h"
+#include "VB.h"
 
 unsigned char s[100];
 int main(int argc, char *args[])
@@ -26,13 +27,13 @@ int main(int argc, char *args[])
 		fs.finish();
 
 		Trie trie(10000);
-		char *s1 = "岑武斌";
+		char *s1 = (char *)"岑武斌";
 		hashtable.insert(s1, strlen(s1), 1);
 		LOG("hash %d", hashtable.query(s1, strlen(s1)));
 		
 
 		trie.insert(s1, strlen(s1), 1);
-		char *s2 = "asdadas";
+		char *s2 = (char *)"asdadas";
 		trie.insert(s2, strlen(s2), 2);
 		hashtable.insert(s2, strlen(s2), 2);
 		LOG("hash %d", hashtable.query(s2, strlen(s2)));
@@ -48,13 +49,12 @@ int main(int argc, char *args[])
 	}
 	else if (strncmp(args[1], "-x", 2) == 0)
 	{
-		StatisticInfo si(STATISTIC_FILE_PATH);
-		//si.write((void *)"asd0", 4, (void *)"arrsa2", 6);
-		char value[100];
-		if (si.read(STATISTIC_KEY_DOCNUM, value))
-		//if (si.read((void *)STATISTIC_KEY_DOCNUM, strlen(STATISTIC_KEY_DOCNUM), (void *)value, 100) )
-		puts(value);
-		else puts("no");
+		int len = 0;
+		uint8 *bytes = VB::encode(128347775, len);
+		for (int i = 0; i < len; i++) printf("%d ", bytes[i]);
+		puts("");
+		printf("len = %d\n", len);
+		printf("decode %d\n", VB::decode(bytes, len));
 	}
 	else if (strncmp(args[1], "-t", 2) == 0)
 	{
@@ -69,7 +69,8 @@ int main(int argc, char *args[])
 	}
 	else if (strncmp(args[1], "-m", 2) == 0)
 	{
-		L("合并到排记录");
+		makeIndex(INVERTED_INDEX_FILE);
+		L("合并倒排记录");
 	}
 	else if (strncmp(args[1], "-h", 2) == 0)
 	{
