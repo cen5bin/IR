@@ -66,9 +66,10 @@ bool mergeTidAndDocID(char *dataRoot)
 	return 1;
 }
 
-bool makeIndex(char *postIndexPath)
+bool makeIndex(char *postIndexPath, char *preIndexPath)
 {
 	IndexMaker im;
 	im.makePostIndex(postIndexPath);
+	im.makePreIndex(preIndexPath);
 	return 1;
 }

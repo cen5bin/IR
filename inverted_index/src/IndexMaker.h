@@ -19,6 +19,7 @@ class IndexMaker
 		};
 		std::vector<point> m_postlist; //当前词项的倒排记录表
 		std::vector<std::string> m_dict;
+		std::vector<std::string> m_docs;
 		int *m_df; //文档频率数组，下标表示词项id 
 		FILE *m_fp; //倒排记录文件指针
 		FILE *m_fp1; //词典文件指针
@@ -27,6 +28,8 @@ class IndexMaker
 		int m_cnt; //当前在处理第几个词项，从0开始
 		void writePostListToFile(int tid);
 		void loadDict();
+		void loadDocs();
+		inline double calidf(int df);
 	public:
 		IndexMaker(){}
 		~IndexMaker(){}

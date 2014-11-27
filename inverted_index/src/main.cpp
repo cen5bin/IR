@@ -13,7 +13,6 @@
 unsigned char s[100];
 int main(int argc, char *args[])
 {
-	system("mkdir -p "DICT_PATH);
 	system("mkdir -p "IR_RUNTIME_TMP);
 	if (argc == 1)
 	{
@@ -69,7 +68,7 @@ int main(int argc, char *args[])
 	}
 	else if (strncmp(args[1], "-m", 2) == 0)
 	{
-		makeIndex(INVERTED_INDEX_FILE);
+		makeIndex(INVERTED_INDEX_FILE, PRE_INDEX_FILE);
 		L("合并倒排记录");
 	}
 	else if (strncmp(args[1], "-h", 2) == 0)

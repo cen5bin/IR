@@ -35,6 +35,7 @@ bool Dictionary::writeToFile(const char *filename)
 		return 0;
 	}
 	int size = m_termVec.size();
+	LOG("dict size %d", size);
 	for (int i = 0; i < size; i++)
 		fprintf(fp, "%s %d\n", m_termVec[i].c_str(), i+1);
 	fclose(fp);

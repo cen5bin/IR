@@ -5,6 +5,7 @@
 #include "StatisticInfo.h"
 #include <algorithm>
 #include "VB.h"
+#include <cmath>
 
 void IndexMaker::makePostIndex(const char *filename)
 {
@@ -19,7 +20,7 @@ void IndexMaker::makePostIndex(const char *filename)
 	m_df = new int[size+1];
 	m_fp = fopen(filename, "w");
 	L(filename);
-	m_fp1 = fopen("aaaa.txt", "w");
+	m_fp1 = fopen(DICT_FILE, "w");
 	m_fp2 = fopen(SORTED_FILE, "r");
 	if (!m_fp || !m_fp1 || !m_fp2) return;
 	int tid, docid;
@@ -35,7 +36,6 @@ void IndexMaker::makePostIndex(const char *filename)
 			lasttid = tid;
 			p = point(docid, 1);
 			lastdocid = -1;
-			//continue;
 		}
 		if (lastdocid != docid)
 		{
@@ -46,22 +46,38 @@ void IndexMaker::makePostIndex(const char *filename)
 		}
 		p.tf++;
 	}
-//	L("zzz");
+	m_df[lasttid] = m_postlist.size();
+	this->writePostListToFile(lasttid);
 	fclose(m_fp);
 	fclose(m_fp1);
 	fclose(m_fp2);
+	m_dict.clear();
 }
 
 
 void IndexMaker::writePostListToFile(int tid)
 {
 	fprintf(m_fp1, "%s %d\n", m_dict[m_cnt++].c_str(), m_offset);
-	fwrite((void *)&tid, sizeof(int), 1, m_fp);
-	fwrite((void *)&m_df[tid], sizeof(int), 1, m_fp);
-	m_offset += sizeof(int) * 2;
+	int size = 0;
+	size += sizeof(int) * 2;
 	std::sort(m_postlist.begin(), m_postlist.end());
 	int last = 0;
-	if (m_postlist.size() == 0) L("zz");
+	for (int i = 0; i < m_postlist.size(); i++)
+	{
+		point p = m_postlist[i];
+		int len;
+		uint8 *bytes = VB::encode(p.docid - last, len);
+		last = p.docid;
+		size += len * sizeof(uint8);
+		bytes = VB::encode(p.tf, len);
+		size += len * sizeof(uint8); 
+	}
+	m_offset += sizeof(int) + size;
+	fwrite((void *)&size, sizeof(int), 1, m_fp);
+	fwrite((void *)&tid, sizeof(int), 1, m_fp);
+	fwrite((void *)&m_df[tid], sizeof(int), 1, m_fp);
+	//m_offset += sizeof(int) * 2;
+	last = 0;
 	for (int i = 0; i < m_postlist.size(); i++)
 	{
 		point p = m_postlist[i];
@@ -69,18 +85,18 @@ void IndexMaker::writePostListToFile(int tid)
 		uint8 *bytes = VB::encode(p.docid - last, len);
 		last = p.docid;
 		fwrite((void *)bytes, sizeof(uint8) * len, 1, m_fp);
-		m_offset += len * sizeof(uint8);
+	//	m_offset += len * sizeof(uint8);
 		bytes = VB::encode(p.tf, len);
 		fwrite((void *)bytes, sizeof(uint8) * len, 1, m_fp);
-		//fwrite((void *)&p.tf, sizeof(int), 1, m_fp);
-		m_offset += len * sizeof(uint8); // + sizeof(int);
+	//	m_offset += len * sizeof(uint8); 
 	}
 	m_postlist.clear();
 }
 
 void IndexMaker::loadDict()
 {
-	FILE *fp = fopen(DICT_FILENAME, "r");
+	FILE *fp = fopen(DICT_TMP_FILE, "r");
+	if (!fp) return;
 	char buffer[1024];
 	while (fgets(buffer, 1024, fp))
 	{
@@ -90,7 +106,77 @@ void IndexMaker::loadDict()
 	fclose(fp);
 }
 
-void IndexMaker::makePreIndex(const char *filename)
+void IndexMaker::loadDocs()
 {
-	
+	FILE *fp = fopen(DOCIDMAP_TMP_FILE, "r");
+	if (!fp) return;
+	char buffer[1024];
+	while (fgets(buffer, 1024, fp))
+	{
+		buffer[strlen(buffer) - 1] = '\0';
+		m_docs.push_back(buffer);
+	}
+	fclose(fp);
+}
+
+void IndexMaker::makePreIndex(const char *filename)
+{	
+	this->loadDocs();
+	StatisticInfo si;
+	char value[128];
+	si.read(STATISTIC_KEY_DOCNUM, value, 128);
+	sscanf(value, "%d", &m_N);
+	FILE *fp = fopen(PRE_INDEX_TMP_FILE, "r");
+	FILE *fp1 = fopen(filename, "wb");
+	FILE *fp2 = fopen(DOCIDMAP_FILE, "w");
+	if (!fp || !fp1) return;
+	std::vector<int> a;
+	std::vector<double> tfidf;
+	std::vector<int> tf;
+	int offset = 0;
+	for (int i = 0; i < m_N; i++)
+	{
+		fprintf(fp2, "%s %d\n", m_docs[i].c_str(), offset);
+		a.clear();
+		tfidf.clear();
+		tf.clear();
+		int docid;
+		fscanf(fp, "%d", &docid);
+		int tid;
+		while (fscanf(fp, "%d", &tid) && tid)
+			a.push_back(tid);
+		sort(a.begin(), a.end());
+		int last = a[0];
+		int cnt = 0;
+		a.push_back(-1);
+		for (int j = 0; j < a.size(); j++)
+		{
+			if (last != a[j])
+			{
+				double tmp = cnt * this->calidf(m_df[last]);
+				tf.push_back(cnt);
+				tfidf.push_back(tmp);
+				last = a[j];
+				cnt = 0;
+			}	
+			cnt++;
+		}
+		int size = sizeof(int) + a.size() * (sizeof(int) + sizeof(double));
+		offset += sizeof(int) + size;
+		fwrite((void *)&size, sizeof(int), 1, fp1);
+		fwrite((void *)&docid, sizeof(int), 1, fp1);
+		for (int j = 0; j < tf.size(); j++)
+		{
+			fwrite((void *)&tf[j], sizeof(int), 1, fp1);
+			fwrite((void *)&tfidf[j], sizeof(double), 1, fp1);
+		}
+	}
+	fclose(fp);
+	fclose(fp1);
+	fclose(fp2);
+}
+
+inline double IndexMaker::calidf(int df)
+{
+	return log(1.0 * m_N / df);
 }

@@ -36,10 +36,11 @@ FileScanner::FileScanner()
 { 
 	m_docID = m_cnt = m_flag = 0;
 	m_cnt1 = m_flag1 = 0;
-	m_fp = m_fp1 = NULL;
-	m_fp0 = fopen(DOCIDMAP_FILE, "w");
+	m_fp = NULL;//m_fp1 = NULL;
+	m_fp1 = fopen(PRE_INDEX_TMP_FILE, "w");
+	m_fp0 = fopen(DOCIDMAP_TMP_FILE, "w");
 	this->openTmpFile();
-	this->openTmpFile1();
+	//this->openTmpFile1();
 	m_sj = new SymbolJudger();
 	m_dict = new Dictionary(MAX_DICTIONARY_SIZE);
 }
@@ -89,10 +90,10 @@ bool FileScanner::scanFile(const char *filename)
 			}
 		}	
 	}
-	fprintf(m_fp1, "\n");
+	fprintf(m_fp1, " 0\n");
 	m_cnt1++;
-	if (m_cnt1 == MAX_VEC_COUNT)
-		this->openTmpFile1();
+	//if (m_cnt1 == MAX_VEC_COUNT)
+	//	this->openTmpFile1();
 	fclose(fp);
 	return 1;
 }
@@ -115,5 +116,5 @@ bool FileScanner::finish()
 	fclose(m_fp0);
 	fclose(m_fp);
 	fclose(m_fp1);
-	return m_dict->writeToFile(DICT_FILENAME);
+	return m_dict->writeToFile(DICT_TMP_FILE);
 }
