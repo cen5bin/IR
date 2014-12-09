@@ -13,7 +13,7 @@ void IndexMaker::makePostIndex(const char *filename)
 	StatisticInfo si;
 	char value[128];
 	m_offset = 0;
-	si.read(STATISTIC_KET_TERMNUM, value, 128);
+	si.read(STATISTIC_KEY_TERMNUM, value, 128);
 	int size = 0;
 	sscanf(value, "%d", &size);
 	LOG("size %d", size);
@@ -54,6 +54,7 @@ void IndexMaker::makePostIndex(const char *filename)
 	m_dict.clear();
 }
 
+//#define TF
 
 void IndexMaker::writePostListToFile(int tid)
 {
@@ -69,8 +70,10 @@ void IndexMaker::writePostListToFile(int tid)
 		uint8 *bytes = VB::encode(p.docid - last, len);
 		last = p.docid;
 		size += len * sizeof(uint8);
+#ifdef TF
 		bytes = VB::encode(p.tf, len);
 		size += len * sizeof(uint8); 
+#endif
 	}
 	m_offset += sizeof(int) + size;
 	fwrite((void *)&size, sizeof(int), 1, m_fp);
@@ -86,8 +89,10 @@ void IndexMaker::writePostListToFile(int tid)
 		last = p.docid;
 		fwrite((void *)bytes, sizeof(uint8) * len, 1, m_fp);
 	//	m_offset += len * sizeof(uint8);
+#ifdef TF
 		bytes = VB::encode(p.tf, len);
 		fwrite((void *)bytes, sizeof(uint8) * len, 1, m_fp);
+#endif
 	//	m_offset += len * sizeof(uint8); 
 	}
 	m_postlist.clear();
@@ -132,14 +137,14 @@ void IndexMaker::makePreIndex(const char *filename)
 	if (!fp || !fp1) return;
 	std::vector<int> a;
 	std::vector<double> tfidf;
-	std::vector<int> tf;
+	std::vector<int>tids;
 	int offset = 0;
 	for (int i = 0; i < m_N; i++)
 	{
 		fprintf(fp2, "%s %d\n", m_docs[i].c_str(), offset);
 		a.clear();
 		tfidf.clear();
-		tf.clear();
+		tids.clear();
 		int docid;
 		fscanf(fp, "%d", &docid);
 		int tid;
@@ -154,20 +159,20 @@ void IndexMaker::makePreIndex(const char *filename)
 			if (last != a[j])
 			{
 				double tmp = cnt * this->calidf(m_df[last]);
-				tf.push_back(cnt);
+				tids.push_back(last);
 				tfidf.push_back(tmp);
 				last = a[j];
 				cnt = 0;
 			}	
 			cnt++;
 		}
-		int size = sizeof(int) + a.size() * (sizeof(int) + sizeof(double));
+		int size = sizeof(int) + tfidf.size() * (sizeof(int) + sizeof(double));
 		offset += sizeof(int) + size;
 		fwrite((void *)&size, sizeof(int), 1, fp1);
 		fwrite((void *)&docid, sizeof(int), 1, fp1);
-		for (int j = 0; j < tf.size(); j++)
+		for (int j = 0; j < tfidf.size(); j++)
 		{
-			fwrite((void *)&tf[j], sizeof(int), 1, fp1);
+			fwrite((void *)&tids[j], sizeof(int), 1, fp1);
 			fwrite((void *)&tfidf[j], sizeof(double), 1, fp1);
 		}
 	}

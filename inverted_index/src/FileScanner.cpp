@@ -112,7 +112,7 @@ bool FileScanner::finish()
 	sprintf(value, "%d", m_docID);
 	si.write((void*)STATISTIC_KEY_DOCNUM, strlen(STATISTIC_KEY_DOCNUM), (void*)value, strlen(value));
 	sprintf(value, "%d", m_dict->getTermCount());
-	si.write((char *)STATISTIC_KET_TERMNUM, value);
+	si.write((char *)STATISTIC_KEY_TERMNUM, value);
 	fclose(m_fp0);
 	fclose(m_fp);
 	fclose(m_fp1);

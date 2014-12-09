@@ -9,6 +9,7 @@
 #include "PreProcess.h"
 #include "StatisticInfo.h"
 #include "VB.h"
+#include "IREngine.h"
 
 unsigned char s[100];
 int main(int argc, char *args[])
@@ -16,35 +17,7 @@ int main(int argc, char *args[])
 	system("mkdir -p "IR_RUNTIME_TMP);
 	if (argc == 1)
 	{
-		HashTable hashtable(1000000);
-		FileScanner fs;
-		fs.scanFile(SPORTS_DOC_PATH"sport10.txt");
-		fs.scanFile(SPORTS_DOC_PATH"sport11.txt");
-		fs.scanFile(SPORTS_DOC_PATH"sport1.txt");
-		fs.scanFile(SPORTS_DOC_PATH"sport2.txt");
-		fs.scanFile(SPORTS_DOC_PATH"sport3.txt");
-		fs.finish();
-
-		Trie trie(10000);
-		char *s1 = (char *)"岑武斌";
-		hashtable.insert(s1, strlen(s1), 1);
-		LOG("hash %d", hashtable.query(s1, strlen(s1)));
-		
-
-		trie.insert(s1, strlen(s1), 1);
-		char *s2 = (char *)"asdadas";
-		trie.insert(s2, strlen(s2), 2);
-		hashtable.insert(s2, strlen(s2), 2);
-		LOG("hash %d", hashtable.query(s2, strlen(s2)));
-
-
-		LOG("%d %d %d", trie.query("asd", 3), trie.query(s1, strlen(s1)), trie.query(s2, strlen(s2)));
-		while (gets((char *)s))
-		{
-			for (int i = 0; s[i]; i++) printf("%d ", s[i]);
-			puts("");
-			puts((char *)s);
-		}
+		puts("please use -h to see the help");
 	}
 	else if (strncmp(args[1], "-x", 2) == 0)
 	{
@@ -71,12 +44,33 @@ int main(int argc, char *args[])
 		makeIndex(INVERTED_INDEX_FILE, PRE_INDEX_FILE);
 		L("合并倒排记录");
 	}
+	else if (strncmp(args[1], "-r", 2) == 0)
+	{
+		puts("测试搜索引擎");
+		puts("正在启动.........");
+		IREngine::initEngine(IR_RUNTIME_DATA);
+		int n;
+		char s[110][128];
+		int tids[110];
+		while (scanf("%d", &n) == 1)
+		{
+			for (int i = 0; i < n; i++)
+				scanf("%s", s[i]);
+			puts("开始查询");
+			IREngine *engine = IREngine::sharedInstance();
+			engine->getTids(&s[0], n, tids);
+			for (int i = 0; i < n; i++)
+				LOG("%s %d", s[i], tids[i]);
+
+		}
+	}
 	else if (strncmp(args[1], "-h", 2) == 0)
 	{
 		puts("参数说明:");
 		puts("-t 处理出<词项ID，docID>对");
 		puts("-s 对<词项ID，docID>对排序");
 		puts("-m 合并倒排记录表");
+		puts("-r 运行引擎");
 		puts("-h 帮助");
 	}
 	else 
