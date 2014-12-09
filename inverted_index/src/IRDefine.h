@@ -42,3 +42,4 @@
 #define MAX_VEC_COUNT 0x7fffffff //每个临时文件中的正排记录的个数
 #define MAX_FILENAME_LEN 256 //文件名最长长度
 #define WINNER_SIZE 100 //胜者表的大小
+#define MAX_TERM_LEN 128 //词项最大长度

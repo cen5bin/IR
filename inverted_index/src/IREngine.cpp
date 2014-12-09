@@ -39,8 +39,23 @@ int IREngine::getTid(char *term)
 	return m_dict->query(term, strlen(term));
 }
 
-void IREngine::getTids(char terms[][128], int n, int *tids)
+void IREngine::getTids(char terms[][MAX_TERM_LEN], int n, int *tids)
 {
+	FUNC_START;
 	for (int i = 0; i < n; i++)
 		tids[i] = m_dict->query(terms[i], strlen(terms[i]));
+	FUNC_END;
+}
+
+void IREngine::query(int *tids, int n, int *docids, int &size)
+{
+	m_postindex->query(tids, n, docids, size);
+}
+
+void IREngine::query(char terms[][MAX_TERM_LEN], int n, int *docids, int &size)
+{
+	int tids[128];
+	this->getTids(terms, n, tids);
+	L("gettids success");
+	this->query(tids, n, docids, size);
 }

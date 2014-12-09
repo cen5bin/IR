@@ -21,12 +21,44 @@ int main(int argc, char *args[])
 	}
 	else if (strncmp(args[1], "-x", 2) == 0)
 	{
+		int ll;
+		uint8 *bytes = VB::encode(7, ll);
+		LOG("%d", ll);
+		ll++;
+		int xx = VB::decode(bytes, ll);
+		LOG("%d", xx);
+		FILE *fp = fopen("aa.dat", "wb");
 		int len = 0;
-		uint8 *bytes = VB::encode(128347775, len);
-		for (int i = 0; i < len; i++) printf("%d ", bytes[i]);
-		puts("");
-		printf("len = %d\n", len);
-		printf("decode %d\n", VB::decode(bytes, len));
+		int size = sizeof(int);
+		int cnt = 0;
+		for (int i = 100; i <= 200; i++)
+		{
+			cnt++;
+			uint8 *bytes = VB::encode(i, len);
+			size+=len * sizeof(uint8);
+		}
+		LOG("size %d", size);
+		fwrite((void*)&size, sizeof(int), 1, fp);
+		fwrite((void*)&cnt, sizeof(int), 1, fp);
+		for (int i = 100; i <= 200; i++)
+		{
+			uint8 *bytes = VB::encode(i, len);
+			fwrite((void *)bytes, sizeof(uint8), len, fp);
+		}
+		fclose(fp);
+		fp = fopen("aa.dat", "rb");
+		fread((void*)&size, sizeof(int), 1, fp);
+		fread((void*)&cnt, sizeof(int), 1, fp);
+		uint8 *kk = new uint8[size-sizeof(int)];
+		fread((void*)kk, sizeof(uint8), size - sizeof(int), fp);
+		int offset = 0;
+		for (int i = 0; i < cnt; i++)
+		{
+			int ret = VB::decode(kk+offset, len);
+			offset += len;
+			LOG("ret %d offset %d", ret, offset);
+		}
+		fclose(fp);
 	}
 	else if (strncmp(args[1], "-t", 2) == 0)
 	{
@@ -50,7 +82,7 @@ int main(int argc, char *args[])
 		puts("正在启动.........");
 		IREngine::initEngine(IR_RUNTIME_DATA);
 		int n;
-		char s[110][128];
+		char s[110][MAX_TERM_LEN];
 		int tids[110];
 		while (scanf("%d", &n) == 1)
 		{
@@ -58,10 +90,14 @@ int main(int argc, char *args[])
 				scanf("%s", s[i]);
 			puts("开始查询");
 			IREngine *engine = IREngine::sharedInstance();
-			engine->getTids(&s[0], n, tids);
+			engine->getTids(s, n, tids);
 			for (int i = 0; i < n; i++)
 				LOG("%s %d", s[i], tids[i]);
-
+			int docids[1000], size;
+			engine->query(tids, n, docids, size);
+			LOG("size %d", size);
+			for (int i = 0; i < size; i++)
+				LOG("%d", docids[i]);
 		}
 	}
 	else if (strncmp(args[1], "-h", 2) == 0)

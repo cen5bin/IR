@@ -31,13 +31,14 @@ void IRPostIndex::loadPostLists(char *filename)
 		fread((void*)&m_df[tid], sizeof(int), 1, fp);
 		size -= 2 * sizeof(int);
 		m_postlists[tid] = new uint8[size];
-		fread((void*)m_postlists, sizeof(uint8), size, fp);
+		fread((void*)m_postlists[tid], sizeof(uint8), size, fp);
 	}
 	fclose(fp);
 }
 
 void IRPostIndex::query(int *tids, int n, int *ret, int &size)
 {
+	LOG("%d", m_df[tids[0]]);
 	size = 0;
 	for (int i = 0; i < n; i++)
 	{
@@ -46,6 +47,7 @@ void IRPostIndex::query(int *tids, int n, int *ret, int &size)
 		{
 			int len;
 			now += VB::decode(m_postlists[tids[i]]+offset, len);
+			LOG("now %d", now);
 			offset += len;
 			ret[size++] = now;
 		}

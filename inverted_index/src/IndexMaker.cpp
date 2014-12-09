@@ -24,23 +24,28 @@ void IndexMaker::makePostIndex(const char *filename)
 	m_fp2 = fopen(SORTED_FILE, "r");
 	if (!m_fp || !m_fp1 || !m_fp2) return;
 	int tid, docid;
-	int lasttid = 1, lastdocid = -1;
+	int lasttid = -1, lastdocid = -1;
 	point p;
 	m_cnt = 0;
 	while (fscanf(m_fp2, "%d%d", &tid, &docid) == 2)
 	{
 		if (lasttid != tid)
 		{
-			m_df[lasttid] = m_postlist.size();
-			this->writePostListToFile(lasttid);
+			if (lasttid != -1)
+			{
+				m_postlist.push_back(p);
+				m_df[lasttid] = m_postlist.size();
+				this->writePostListToFile(lasttid);
+			}
 			lasttid = tid;
 			p = point(docid, 1);
 			lastdocid = -1;
 		}
 		if (lastdocid != docid)
 		{
-			lastdocid = docid;
+			if (lastdocid != -1)
 			m_postlist.push_back(p);
+			lastdocid = docid;
 			p = point(docid, 1);
 			continue;
 		}
@@ -61,7 +66,12 @@ void IndexMaker::writePostListToFile(int tid)
 	fprintf(m_fp1, "%s %d\n", m_dict[m_cnt++].c_str(), m_offset);
 	int size = 0;
 	size += sizeof(int) * 2;
-	std::sort(m_postlist.begin(), m_postlist.end());
+	if(tid == 78)
+	{
+		for (int i = 0 ; i < m_postlist.size(); i++)
+			LOG("%d %d", m_postlist[i].docid, m_postlist[i].tf);
+	}
+//	std::sort(m_postlist.begin(), m_postlist.end());
 	int last = 0;
 	for (int i = 0; i < m_postlist.size(); i++)
 	{
@@ -150,6 +160,7 @@ void IndexMaker::makePreIndex(const char *filename)
 		int tid;
 		while (fscanf(fp, "%d", &tid) && tid)
 			a.push_back(tid);
+		if (a.size() == 0) continue;
 		sort(a.begin(), a.end());
 		int last = a[0];
 		int cnt = 0;

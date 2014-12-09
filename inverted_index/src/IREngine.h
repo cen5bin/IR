@@ -18,5 +18,7 @@ class IREngine
 		IREngine(char *datapath);
 		~IREngine();
 		int getTid(char *term);
-		void getTids(char terms[][128], int n, int *tids);
+		void getTids(char terms[][MAX_TERM_LEN], int n, int *tids);
+		void query(char terms[][MAX_TERM_LEN], int n, int *docids, int &size);
+		void query(int *tids, int n, int *docids, int &size);
 };
