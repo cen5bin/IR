@@ -56,6 +56,5 @@ void IREngine::query(char terms[][MAX_TERM_LEN], int n, int *docids, int &size)
 {
 	int tids[128];
 	this->getTids(terms, n, tids);
-	L("gettids success");
 	this->query(tids, n, docids, size);
 }

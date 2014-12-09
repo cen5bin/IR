@@ -66,11 +66,6 @@ void IndexMaker::writePostListToFile(int tid)
 	fprintf(m_fp1, "%s %d\n", m_dict[m_cnt++].c_str(), m_offset);
 	int size = 0;
 	size += sizeof(int) * 2;
-	if(tid == 78)
-	{
-		for (int i = 0 ; i < m_postlist.size(); i++)
-			LOG("%d %d", m_postlist[i].docid, m_postlist[i].tf);
-	}
 //	std::sort(m_postlist.begin(), m_postlist.end());
 	int last = 0;
 	for (int i = 0; i < m_postlist.size(); i++)
@@ -134,6 +129,16 @@ void IndexMaker::loadDocs()
 	fclose(fp);
 }
 
+void IndexMaker::normalize(std::vector<double> &tfidf)
+{
+	double len = 0;
+	for (int i = 0; i < tfidf.size(); i++)
+		len += tfidf[i] * tfidf[i];
+	len = sqrt(len);
+	for (int i = 0; i < tfidf.size(); i++)
+		tfidf[i] /= len;
+}
+
 void IndexMaker::makePreIndex(const char *filename)
 {	
 	this->loadDocs();
@@ -177,6 +182,7 @@ void IndexMaker::makePreIndex(const char *filename)
 			}	
 			cnt++;
 		}
+		this->normalize(tfidf);
 		int size = sizeof(int) + tfidf.size() * (sizeof(int) + sizeof(double));
 		offset += sizeof(int) + size;
 		fwrite((void *)&size, sizeof(int), 1, fp1);

@@ -47,7 +47,7 @@ void IRPostIndex::query(int *tids, int n, int *ret, int &size)
 		{
 			int len;
 			now += VB::decode(m_postlists[tids[i]]+offset, len);
-			LOG("now %d", now);
+			//LOG("now %d", now);
 			offset += len;
 			ret[size++] = now;
 		}

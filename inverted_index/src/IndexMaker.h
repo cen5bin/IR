@@ -30,6 +30,7 @@ class IndexMaker
 		void loadDict();
 		void loadDocs();
 		inline double calidf(int df);
+		void normalize(std::vector<double> &tfidf);
 	public:
 		IndexMaker(){}
 		~IndexMaker(){}
