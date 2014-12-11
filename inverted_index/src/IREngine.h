@@ -21,4 +21,5 @@ class IREngine
 		void getTids(char terms[][MAX_TERM_LEN], int n, int *tids);
 		void query(char terms[][MAX_TERM_LEN], int n, int *docids, int &size);
 		void query(int *tids, int n, int *docids, int &size);
+		void getDocVector(int docid, int *tid, double *tfidf, int &size);
 };

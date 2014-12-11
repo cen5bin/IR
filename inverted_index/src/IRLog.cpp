@@ -1,7 +1,9 @@
 #include "IRLog.h"
 
-#define LOG_PATH "./log/"
-#define ERR_PATH "./err/"
+//#define LOG_PATH "./log/"
+//#define ERR_PATH "./err/"
+#define LOG_PATH "."
+#define ERR_PATH "."
 
 static const int FILENAME_LEN = 50;
 static const int TIME_LEN = 30;

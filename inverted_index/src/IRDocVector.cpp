@@ -13,6 +13,7 @@ IRDocVector::IRDocVector(char *datapath)
 	info.read(STATISTIC_KEY_DOCNUM, value, 128);
 	sscanf(value, "%d", &m_docNum);	
 	m_docVec = new vecNode*[m_docNum + 1];
+	m_docVecLen = new int[m_docNum + 1];
 	sprintf(filename, "%s%s", datapath, PRE_INDEX_FILE_NAME);
 	FILE *fp = fopen(filename, "rb");
 	if (!fp) return;
@@ -25,6 +26,7 @@ IRDocVector::IRDocVector(char *datapath)
 		int count = (size-sizeof(int))/sizeof(vecNode);
 	//	LOG("count %d", count);
 		m_docVec[docid] = new vecNode[count];
+		m_docVecLen[docid] = count;
 		int ret = fread((void*)m_docVec[docid], sizeof(vecNode), count, fp);
 	//	LOG("ret %d", ret);
 		//for (int j = 0; j < count; j++)
@@ -36,4 +38,15 @@ IRDocVector::IRDocVector(char *datapath)
 IRDocVector::~IRDocVector()
 {
 	if (m_docVec) delete m_docVec;
+	if (m_docVecLen) delete m_docVecLen;
+}
+
+void IRDocVector::getDocVector(int docid, int *tid, double *tfidf, int &size)
+{
+	size = 0;
+	for (int i = 0; i < m_docVecLen[docid]; i++)
+	{
+		tid[size] = m_docVec[docid][i].tid;
+		tfidf[size++] = m_docVec[docid][i].tfidf;
+	}
 }

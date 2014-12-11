@@ -3,7 +3,7 @@ OBJ_DIR=./obj
 BIN_DIR=./bin
 DEBUG_DIR=$(BIN_DIR)/debug
 RELEASE_DIR=$(BIN_DIR)/release
-INCLUDE_DIRS=./include
+INCLUDE_DIRS=./include /usr/lib/jvm/java-7-openjdk-i386/include  /usr/lib/jvm/java-7-openjdk-i386/include/linux
 LIB_DIR=./lib
 
 EXTENSION=.c .cpp .cc 
@@ -30,14 +30,17 @@ LDFLAG= $(foreach lib, ${LIBS}, -l${lib}) -L$(LIB_DIR)
 
 TARGET=work.o
 TARGET_LIB=inverted_index.a
+TARGET_SO=libIR.so
 
 #=============================================================
 
 all : main
 main : $(OBJECTS)
 	$(CC) $(CPPFLAGS) $(OBJECTS) -o  $(TARGET) $(LDFLAG)
+	$(CC) $(CPPFLAGS) -shared -fpic $(OBJECTS) -o $(TARGET_SO) $(LDFLAG)
 	ar rvl $(TARGET_LIB) $(OBJECTS)
 	cp $(TARGET_LIB) $(RELEASE_DIR)/
+	mv $(TARGET_SO) $(RELEASE_DIR)/
 
 
 $(OBJ_DIR)/%.d : $(SRC_DIR)/%.cpp
@@ -60,3 +63,4 @@ include $(OBJECTS:.o=.d)
 .PHONY: clean
 clean:
 	rm -rf $(OBJECTS) $(RELEASE_DIR)/* $(DEBUG_DIR)/*  *.a *.out *.o $(OBJ_DIR)/*.d
+

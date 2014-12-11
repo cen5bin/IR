@@ -58,3 +58,8 @@ void IREngine::query(char terms[][MAX_TERM_LEN], int n, int *docids, int &size)
 	this->getTids(terms, n, tids);
 	this->query(tids, n, docids, size);
 }
+
+void IREngine::getDocVector(int docid, int *tid, double *tfidf, int &size)
+{
+	m_docVec->getDocVector(docid, tid, tfidf, size);
+}

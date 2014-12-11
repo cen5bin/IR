@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/commons-collections.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/commons-httpclient-3.0.1.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/ezmorph-1.0.3.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/json-lib-2.2.3-jdk15.jar"/>
+	<classpathentry kind="lib" path="D:/Develop/Java/lib/jsonlib/jsonlib/json-lib-2.3-jdk13.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
