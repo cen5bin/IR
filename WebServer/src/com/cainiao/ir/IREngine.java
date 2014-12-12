@@ -53,6 +53,19 @@ public class IREngine {
 		return ret;
 	}
 	
+	public static HashMap<Integer, Integer> getDocids(ArrayList<Integer> docids) {
+		HashMap<Integer, Integer> ret = new HashMap<Integer, Integer>();
+		for (Integer docid : docids) {
+			if (ret.containsKey(docid)) {
+				Integer tmp = ret.get(docid);
+				tmp++;
+				ret.put(docid, tmp);
+			}
+			else ret.put(docid, 1);
+		}
+		return ret;
+	}
+	
 	public static void main(String[] args) {
 		init("deploy/");
 		

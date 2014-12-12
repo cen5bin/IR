@@ -22,7 +22,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
 <body>
-
 <form name="myform" method="get" action="Query">
 <table bgcolor="#FFFFFF">
 <tr><td>

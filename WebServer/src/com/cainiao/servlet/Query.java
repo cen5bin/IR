@@ -3,6 +3,7 @@ package com.cainiao.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.cainiao.ir.IRDevideWord;
 import com.cainiao.ir.IREngine;
+import com.cainiao.vsm.VSMInterface;
 
 /**
  * Servlet implementation class Query
@@ -48,17 +50,28 @@ public class Query extends HttpServlet {
 		ArrayList<Integer>  tids = IREngine.getTids(ret);
 		ArrayList<Integer> docids = IREngine.query(tids);
 		
+		HashMap<Integer, Integer> tt = IREngine.getDocids(docids);
+		System.out.print("-----------------------\n");
+		for (Integer key : tt.keySet()) {
+			System.out.print(key+":"+tt.get(key)+"\n");
+		}
+		System.out.print("-----------------------\n");
+
+		HashMap<Integer, HashMap<Integer, Double>> vecs = IREngine.getDocVectors(docids);
 		
-		
+		ArrayList<Integer> dd = VSMInterface.getTopK(vecs, tids, tt, 10);
+		for (Integer tmp : dd) System.out.print(tmp+" ");
+		VSMInterface.getCluster(4);
 		response.setContentType("text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		out.print("tids:\n");
-		for (Integer tid : tids) out.print(tid+" ");
-		out.print("\ndocids\n");
-		for (Integer docid : docids) out.print(docid + " ");
-		out.print("\n");
-		out.print(query);
+		
+//		out.print("tids:\n");
+//		for (Integer tid : tids) out.print(tid+" ");
+//		out.print("\ndocids\n");
+//		for (Integer docid : docids) out.print(docid + " ");
+//		out.print("\n");
+//		out.print(query);
 	}
 
 	/**
