@@ -1,7 +1,7 @@
 make
 mkdir -p deploy
 
-cp data/statistic.dat deploy
+cp data/runtime/statistic.dat deploy
 cp data/runtime/*.txt deploy
 cp data/runtime/*.dat deploy
 cp bin/release/*.so deploy

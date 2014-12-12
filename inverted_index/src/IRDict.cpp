@@ -20,20 +20,22 @@ IRDict::IRDict(char *datapath)
 	info.read(STATISTIC_KEY_TERMNUM, value, 128);
 	int size;
 	sscanf(value, "%d", &size);
+	LOG("%d", size);
 	m_hashtable = new HashTable((int)(size * 1.2));
 	m_offset = new int[size+1];
 	sprintf(filename, "%s%s", datapath, DICT_FILE_NAME);
 	FILE *fp = fopen(filename, "r");
 	if (!fp) return;
-	char term[128];
+	char term[1280];
 	int tid, offset;
 	while (fscanf(fp, "%s%d%d", term, &tid, &offset) == 3)
 	{
-	//	LOG("term %s tid %d", term, tid);
+//		LOG("term %s tid %d", term, tid);
 		m_hashtable->insert(term, strlen(term), tid);
 		m_offset[tid] = offset;
 	}
 	fclose(fp);
+	LOG("yes");
 }
 
 bool IRDict::insert(char *s, int len, int flag)

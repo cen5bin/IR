@@ -5,7 +5,7 @@
 #define MAX_LINE_LEN 10000
 #define MAX_TERM_LEN 200
 
-#define MAX_DICTIONARY_SIZE 500000
+#define MAX_DICTIONARY_SIZE 5000000
 
 
 FileScanner::~FileScanner()
@@ -67,7 +67,7 @@ bool FileScanner::scanFile(const char *filename)
 				if (cnt)
 				{
 					tmp[cnt] = '\0';
-					if (!m_sj->judge(tmp, cnt) && tmp[0] != ' ' && tmp[0] != '\n' && tmp[0] != '\r')
+					if (!m_sj->judge(tmp, cnt) && tmp[0] != ' ' && tmp[0] != '\n' && tmp[0] != '\r' && tmp[cnt-1] != '\r' && tmp[cnt-1] != '\n')
 					{
 						pos++;
 						int termID = m_dict->getTermID(tmp, cnt);

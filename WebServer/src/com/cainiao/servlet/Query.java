@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cainiao.ir.IRDevideWord;
+import com.cainiao.ir.IREngine;
 
 /**
  * Servlet implementation class Query
@@ -33,6 +34,8 @@ public class Query extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
+		IREngine.init("/usr/lib/jni/data/");
+		
 		
 		String query = request.getParameter("content");
 		query = new String(query.getBytes("ISO8859-1"),"UTF-8");
@@ -42,10 +45,19 @@ public class Query extends HttpServlet {
 		for (String s : ret) System.out.print(s+"|");
 		System.out.print("\n");
 		
+		ArrayList<Integer>  tids = IREngine.getTids(ret);
+		ArrayList<Integer> docids = IREngine.query(tids);
+		
+		
+		
 		response.setContentType("text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		
+		out.print("tids:\n");
+		for (Integer tid : tids) out.print(tid+" ");
+		out.print("\ndocids\n");
+		for (Integer docid : docids) out.print(docid + " ");
+		out.print("\n");
 		out.print(query);
 	}
 
