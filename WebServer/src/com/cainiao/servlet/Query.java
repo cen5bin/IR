@@ -2,6 +2,7 @@ package com.cainiao.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.cainiao.dao.DataReader;
+import com.cainiao.entity.News;
+import com.cainiao.entity.ResultItem;
 import com.cainiao.ir.IRDevideWord;
 import com.cainiao.ir.IREngine;
 import com.cainiao.vsm.VSMInterface;
@@ -41,7 +46,13 @@ public class Query extends HttpServlet {
 		
 		String query = request.getParameter("content");
 		query = new String(query.getBytes("ISO8859-1"),"UTF-8");
-//		System.out.print(query);
+		String page0 = request.getParameter("page");
+		int page = 1;
+		if (page0 != null) page = Integer.parseInt(page0);
+//		int flag = Integer.parseInt(request.getParameter("flag"));
+		
+//		if (flag == 1)
+		
 		
 		ArrayList<String> ret = IRDevideWord.work(query);
 		for (String s : ret) System.out.print(s+"|");
@@ -65,7 +76,26 @@ public class Query extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
+	
 		
+		try {
+			final int count_per_page = 10;
+			int start = count_per_page * (page-1);
+			int end = start + count_per_page - 1;
+			if (end >= docids.size()) end = docids.size() - 1;
+			ArrayList<News> news = DataReader.getNews(docids.subList(start, end));
+			HttpSession session = request.getSession();
+			session.setAttribute("results", news);
+			session.setAttribute("pagecount", (docids.size()+9)/10);
+			request.getRequestDispatcher("/result.jsp").include(request, response);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+//		response.sendRedirect(request.getContextPath()+"/result.jsp");
 //		out.print("tids:\n");
 //		for (Integer tid : tids) out.print(tid+" ");
 //		out.print("\ndocids\n");

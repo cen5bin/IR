@@ -26,6 +26,7 @@ class FileScanner
 
 		int m_docID; //当前正在扫描的docID
 		bool write(int tid, int docID); //将词项id和docID组写到文件中
+		int getDocid(const char *filename);
 	public:
 		~FileScanner();
 		FileScanner();

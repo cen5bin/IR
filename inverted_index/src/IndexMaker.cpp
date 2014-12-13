@@ -57,13 +57,16 @@ void IndexMaker::makePostIndex(const char *filename)
 	fclose(m_fp1);
 	fclose(m_fp2);
 	m_dict.clear();
+	L("make postindex success");
 }
 
 //#define TF
 
 void IndexMaker::writePostListToFile(int tid)
 {
+//	LOG("%d", m_postlist.size());
 	fprintf(m_fp1, "%s %d\n", m_dict[m_cnt++].c_str(), m_offset);
+//	if (m_postlist.size() == 0) return;
 	int size = 0;
 	size += sizeof(int) * 2;
 //	std::sort(m_postlist.begin(), m_postlist.end());

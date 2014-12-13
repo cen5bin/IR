@@ -18,24 +18,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
-
+<link rel="stylesheet" href="./css/result.css" type="text/css">
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
   </head>
   
 <body>
 <form name="myform" method="get" action="Query">
-<table bgcolor="#FFFFFF">
-<tr><td>
-
-<div  id="ico" style="position:absolute;left:520px;top:100px;height:200px; border:2px">
-<a href=""><img  height="200" width="250" src="./img/logo1.jpg"  align="bottom" border="0"></a>
+<input type="hidden" name="page" value="1">
+<!-- <input type="hidden" name="flag" value="0"> -->
+<div id="main_container">
+<div id="logo-container">
+<div class="main-head"> <img height="200" width="200" src="./img/logo.jpg"></div>
+<div id="title0" class="main-head">菜鸟搜索</div>
 </div>
-
-<div id="circle" style="position:absolute;left:420px;top:320px;height:200px; border:0px">
-<input type="text" style="width:450px;height:38px" id="content" name="content" size=30><input type="submit" style="width:100px;height:37px;color:white;font-size:16px;font-family:SimHei;border:none;background:#1F1F1F;cursor:pointer; " value="菜鸟搜索"  onclick="window.location='result.jsp'" >
+<div class="col-lg-8 query-form">
+    <div class="input-group">
+      <input type="text" class="form-control query-input" name="content">
+      <span class="input-group-btn">
+        <button class="btn btn-default searchbtn btn-primary" type="submit">Go!</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
 </div>
-
-</td></tr>
-</table>
 </form>
+
+
 </body>
 </html>

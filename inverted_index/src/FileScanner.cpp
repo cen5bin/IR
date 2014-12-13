@@ -44,9 +44,22 @@ FileScanner::FileScanner()
 	m_sj = new SymbolJudger();
 	m_dict = new Dictionary(MAX_DICTIONARY_SIZE);
 }
+
+int FileScanner::getDocid(const char *filename)
+{
+	int l = strlen(filename);
+	int ret = 0;
+	for (int i = l - 9, j = 0; j < 5; j++, i++ )
+		ret = ret * 10 + (filename[i] - '0');
+	return ret + 1;
+}
+
 bool FileScanner::scanFile(const char *filename)
 {
+//	m_docID = this->getDocid(filename);
+	//LOG("%s %d", filename, m_docID);
 	fprintf(m_fp0, "%s %d\n", filename, ++m_docID);
+//	fprintf(m_fp0, "%s %d\n", filename, m_docID);
 	fprintf(m_fp1, "%d", m_docID);
 	char s[MAX_LINE_LEN];
 	FILE *fp = fopen(filename, "r");
