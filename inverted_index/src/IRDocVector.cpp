@@ -21,6 +21,7 @@ IRDocVector::IRDocVector(char *datapath)
 	{
 		int size, docid;			
 		fread((void*)&size, sizeof(int), 1, fp);
+		//if (i == 0) LOG("aa %d", size);
 		fread((void*)&docid, sizeof(int), 1, fp);
 	//	LOG("size %d, docid %d", size, docid);
 		int count = (size-sizeof(int))/sizeof(vecNode);
@@ -28,6 +29,10 @@ IRDocVector::IRDocVector(char *datapath)
 		m_docVec[docid] = new vecNode[count];
 		m_docVecLen[docid] = count;
 		int ret = fread((void*)m_docVec[docid], sizeof(vecNode), count, fp);
+		//if (i == 0)
+		//{
+		//	for (int j = 0; j < 10; j++) LOG("%f", m_docVec[docid][j].tfidf);
+		//}
 	//	LOG("ret %d", ret);
 		//for (int j = 0; j < count; j++)
 		//	LOG("tid %d, tfidf %.3f", m_docVec[docid][j].tid, m_docVec[docid][j].tfidf);

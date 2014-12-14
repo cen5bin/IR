@@ -40,6 +40,7 @@ bool SymbolJudger::loadSymbols(const char *filename)
 
 bool SymbolJudger::judge(char *s, int n)
 {
+	if (n > 10) return 1;
 	if (!m_loaded)
 	{
 		LE("You haven't load symbols. Please call loadSymbols first");

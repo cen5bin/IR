@@ -35,15 +35,65 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>
 <div class="col-lg-8 query-form">
     <div class="input-group">
-      <input type="text" class="form-control query-input" name="content">
+      <input type="text" class="form-control query-input" oninput="getlist()" name="content" id="content">
+     
       <span class="input-group-btn">
         <button class="btn btn-default searchbtn btn-primary" type="submit">Go!</button>
       </span>
     </div><!-- /input-group -->
+     <div id="search-list"> </div>
   </div><!-- /.col-lg-6 -->
 </div>
+
 </form>
 
+<script type="text/javascript">
+var tmp = 0;
+var getlist = function(){
 
+	var dd  = document.getElementById("content");
+	
+	
+	htmlobj=$.ajax(
+			{ 
+			  type:"POST",
+			  url: "./AutoCompletion",
+			  asyn:true,
+			  context: document.body,
+			  data:"content=" + dd.value,
+			  success: function(data){
+				 // alert(data);
+				//alert($("#content").attr("value"));
+				 if (data == "") $("#search-list").css("display", "none");
+				 else {
+				  $("#search-list").css("display", "block");
+				  $("#search-list").html("");// = "";
+				  $("#search-list").html(data);
+// 				  $("#search-list").append($(data));
+// 				  $("#search-list").innerHTML = data;
+				 }
+		      	}
+			});
+	
+	
+// 	tmp = 1 - tmp;
+// 	if (tmp == 1)
+// 	$("#search-list").css("display", "block");// = "block";
+// 	else 
+// 		$("#search-list").css("display", "none");
+}
+
+var insert = function(s) {
+	
+	$("#content").val(s); 
+	$("#search-list").css("display", "none");
+};
+
+$(document).ready( function(){
+	//alert("zz");
+	//$("#content").keyup(function() {alert("asd");});
+});
+
+</script>
 </body>
 </html>

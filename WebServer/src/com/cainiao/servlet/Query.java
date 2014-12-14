@@ -18,6 +18,8 @@ import com.cainiao.entity.News;
 import com.cainiao.entity.ResultItem;
 import com.cainiao.ir.IRDevideWord;
 import com.cainiao.ir.IREngine;
+import com.cainiao.ir.KMPMatcher;
+import com.cainiao.recommend.QueryRecommend;
 import com.cainiao.vsm.VSMInterface;
 
 /**
@@ -58,21 +60,46 @@ public class Query extends HttpServlet {
 		for (String s : ret) System.out.print(s+"|");
 		System.out.print("\n");
 		
+		//ArrayList<String> tmp1 =  QueryRecommend.getRecommendations(ret, 4);
+		
+		
 		ArrayList<Integer>  tids = IREngine.getTids(ret);
 		ArrayList<Integer> docids = IREngine.query(tids);
-		
+//		System.out.print("zzz\n");
 		HashMap<Integer, Integer> tt = IREngine.getDocids(docids);
-		System.out.print("-----------------------\n");
-		for (Integer key : tt.keySet()) {
-			System.out.print(key+":"+tt.get(key)+"\n");
-		}
-		System.out.print("-----------------------\n");
+//		System.out.print("-----------------------\n");
+//		for (Integer key : tt.keySet()) {
+//			System.out.print(key+":"+tt.get(key)+"\n");
+//		}
+//		System.out.print("-----------------------\n");
+//		System.out.print("zzz3\n");
 
 		HashMap<Integer, HashMap<Integer, Double>> vecs = IREngine.getDocVectors(docids);
+//		System.out.print("zzz4\n");
+
 		
-		ArrayList<Integer> dd = VSMInterface.getTopK(vecs, tids, tt, 10);
-		for (Integer tmp : dd) System.out.print(tmp+" ");
-		VSMInterface.getCluster(4);
+		
+		ArrayList<Integer> dd = VSMInterface.getTopK(vecs, tids, tt, null, null, 300);
+
+		//		for (Integer tmp : dd) System.out.print(tmp+" ");
+		final int clusterNum = 4;
+		HashMap<Integer, Integer> ret1 = VSMInterface.getCluster(clusterNum);
+		HashMap<Integer, ArrayList<Integer>> clusters = new HashMap<Integer, ArrayList<Integer>>();
+		for (Integer docid : ret1.keySet()) {
+			Integer key = ret1.get(docid);
+			if (clusters.containsKey(key)) {
+				((ArrayList<Integer>)(clusters.get(key))).add(docid);
+			}
+			else {
+				ArrayList<Integer> tt1 = new ArrayList<Integer>();
+				tt1.add(docid);
+				clusters.put(key, tt1);
+			}
+		}
+		
+		
+		//for (String ss : tmp1)System.out.print(ss+"\n");
+//		System.out.print("zzz2\n");
 		response.setContentType("text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
@@ -82,11 +109,19 @@ public class Query extends HttpServlet {
 			final int count_per_page = 10;
 			int start = count_per_page * (page-1);
 			int end = start + count_per_page - 1;
-			if (end >= docids.size()) end = docids.size() - 1;
-			ArrayList<News> news = DataReader.getNews(docids.subList(start, end));
+			if (end >= dd.size()) end = dd.size() - 1;
+			ArrayList<News> news = DataReader.getNews(dd.subList(start, end));
+			KMPMatcher.setMaxSize(100);
+			for (News n1 : news) {
+				n1.content = KMPMatcher.match(n1.content, ret);
+				n1.title = KMPMatcher.match(n1.title, ret);
+		
+			}
 			HttpSession session = request.getSession();
 			session.setAttribute("results", news);
-			session.setAttribute("pagecount", (docids.size()+9)/10);
+			session.setAttribute("pagecount", (dd.size()+9)/10);
+			session.setAttribute("cluster", clusters);
+			session.setAttribute("clusterinfo", ret1);
 			request.getRequestDispatcher("/result.jsp").include(request, response);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -95,13 +130,6 @@ public class Query extends HttpServlet {
 		
 		
 		
-//		response.sendRedirect(request.getContextPath()+"/result.jsp");
-//		out.print("tids:\n");
-//		for (Integer tid : tids) out.print(tid+" ");
-//		out.print("\ndocids\n");
-//		for (Integer docid : docids) out.print(docid + " ");
-//		out.print("\n");
-//		out.print(query);
 	}
 
 	/**

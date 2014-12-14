@@ -5,65 +5,31 @@ import java.util.HashMap;
 
 public class VSMDoc implements Comparable{
 	
-	private double docLength;
-	private  double docScore;
+	private static double threshold = 0.1;
+	private double docLength = 1;
+	private double vectorScore = 0.0;
+	private double docScore = 0.0;
 	//private String docAbstract;
-	private int ref;
-	private int docID;
+	private int ref = 0;
+	private int titleScore = 0;
+	private int hot = 0;
+	private int docID = 0;
 	private HashMap<Integer, Double> docVector = new HashMap<Integer, Double>(); 
 	
-	private void calculateDocLength()
-	{
-//		double sum = 0;
-//		for (int i = 0; i < 500; i++)
-//		{
-//			double tmp = docVector.get(i);
-//			sum += tmp * tmp;
-//		}
-//		double len = Math.sqrt(sum);
-		this.docLength = 1;
-//		double sum = 0;
-//		for (int i = 0 ;i < indexList.size(); i++)
-//		{
-//			double tf = VSMEngine.getTFFromEngine(indexList.get(i));
-//			sum += tf * tf;
-//		}
-//		double len = Math.sqrt(sum);
-//		this.docLength = len;
-	}
-	
+
 	private void initDocVector(HashMap<Integer, Double> vector)
 	{
 		docVector = vector;
-//		Random random = new Random();
-//		for (int i = 0; i < 500; i++)
-//		{			
-//			docVector.put(i, random.nextDouble()%100);
-//		}
-//		for (int i = 0; i < queryTermIDList.size(); i++) 
-//		{
-//			double wf;
-//			TFIndex index = new TFIndex(docID, queryTermIDList.get(i));
-//			double tf = VSMEngine.getTFFromEngine(index);
-//			if (tf > 0)
-//				wf = 1 + Math.log(tf)/Math.log(2);
-//			else
-//				wf = 0.0;
-//			double idf = VSMEngine.getIDFFromEngine(queryTermIDList.get(i));
-//			double weight = idf * wf;
-//			if (weight != 0)
-//			{
-//				docVector.put(index.getTermID(), weight);
-//			}
-//		}
 	}
 	
-	public VSMDoc(int docId, HashMap<Integer, Double> vector, int ref)
+	public VSMDoc(int docId, HashMap<Integer, Double> vector, int ref, 
+				  int titleScore, int hot)
 	{	
 		this.docID = docId;
 		this.ref = ref;
+		this.titleScore = titleScore;
+		this.hot = hot;
 		initDocVector(vector);
-		calculateDocLength();
 	}
 	
 	public HashMap<Integer, Double> getDocVector()
@@ -81,32 +47,59 @@ public class VSMDoc implements Comparable{
 		return docID;
 	}
 	
-	public double getScore()
+	public double getVectorScore()
+	{
+		return vectorScore;
+	}
+	
+	public void setVectorScore(double score)
+	{
+		vectorScore = score;
+	}
+	
+	public double getDocScore()
 	{
 		return docScore;
 	}
 	
-	public void setScore(double score)
+	public void setDocScore(double score)
 	{
-		docScore = score;
+		this.docScore = score;
+	}
+	
+	
+	public int getRef() {
+		return ref;
+	}
+
+	public int getTitleScore() {
+		return titleScore;
+	}
+
+	public int getHot() {
+		return hot;
+	}
+
+	public void setHot(int hot) {
+		this.hot = hot;
 	}
 
 	public int compareTo(Object o) {
 		// TODO Auto-generated method stub
 		VSMDoc doc = (VSMDoc)o;
-		if (ref > doc.ref)
+		if (docScore - doc.docScore > threshold)
 		{
 			return -1;
 		}
-		else if (ref < doc.ref)
+		else if (docScore < doc.docScore - threshold)
 		{
 			return 1;
 		}
 		else 
 		{
-			if (docScore > doc.docScore)
+			if (docID > doc.docID)
 				return -1;
-			else if (docScore == doc.docScore)
+			else if (docID == doc.docID)
 				return 0;
 			else 
 				return 1;

@@ -39,8 +39,8 @@
 
 ///////////各种常量/////////
 #define ERROR -1
-#define MAX_ITEM_COUNT 1000000 //每个临时文件中tid，docid的对数
+#define MAX_ITEM_COUNT 2000000 //每个临时文件中tid，docid的对数
 #define MAX_VEC_COUNT 0x7fffffff //每个临时文件中的正排记录的个数
 #define MAX_FILENAME_LEN 256 //文件名最长长度
-#define WINNER_SIZE 10000 //胜者表的大小
-#define MAX_TERM_LEN 128 //词项最大长度
+#define WINNER_SIZE 1000 //胜者表的大小
+#define MAX_TERM_LEN 12800 //词项最大长度

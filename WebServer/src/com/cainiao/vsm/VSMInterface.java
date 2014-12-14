@@ -29,10 +29,13 @@ public class VSMInterface {
 	
 	public static ArrayList<Integer> getTopK(HashMap<Integer, HashMap<Integer, Double>> vectors, 
 											ArrayList<Integer> queryTermList, 
-											HashMap<Integer, Integer> refMap, int K)
+											HashMap<Integer, Integer> refMap, 
+											HashMap<Integer, Integer> titleMap,
+											HashMap<Integer, Integer> hotMap,
+											int K)
 	{
 //		printHelper(vectors, queryTermList, K);
-		VSMEngine vEngine = new VSMEngine(vectors, queryTermList, refMap);
+		VSMEngine vEngine = new VSMEngine(vectors, queryTermList, refMap, titleMap, hotMap);
 		docs = vEngine.getTopKDocuments(K);
 		ArrayList<Integer> docIDs = new ArrayList<Integer>();
 		for (int i = 0; i < docs.size(); i++)

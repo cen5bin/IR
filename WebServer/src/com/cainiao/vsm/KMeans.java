@@ -142,7 +142,7 @@ public class KMeans {
 			Entry entry = iterator.next();
 			int docID = (Integer)entry.getKey();
 			int clsLabel = (Integer)entry.getValue();
-			System.out.println("docID: " + docID + " " + "cluster: " + clsLabel);
+		//	System.out.println("docID: " + docID + " " + "cluster: " + clsLabel);
 		}
 	}
 	

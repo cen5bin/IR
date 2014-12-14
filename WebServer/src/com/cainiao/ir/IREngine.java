@@ -1,6 +1,10 @@
 package com.cainiao.ir;
 
 
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -9,13 +13,15 @@ import com.cainiao.jni.DocVectorNode;
 import com.cainiao.jni.Worker;
 
 public class IREngine {
+	private static ArrayList<HashMap<Integer , Double>> docVecs = new ArrayList<HashMap<Integer,Double>>();
 	private static boolean isInit;
 	static{
 		isInit = false;
 	}
-	public static void init(String datapath) {
+	public static void init(String datapath) throws FileNotFoundException {
 		if (isInit) return;
 		Worker.initEngine(datapath);
+//		IREngine.loadDocVecs(datapath+"pre_index.dat");
 		isInit = true;
 	}
 	public static HashMap<Integer, HashMap<Integer, Double>> getDocVectors(ArrayList<Integer> docids) {
@@ -28,6 +34,9 @@ public class IREngine {
 				vec.put(node.tid, node.tfidf);
 			ret.put(docid, vec);
 		}
+//		for (int docid : docids) {
+//			ret.put(docid, docVecs.get(docid-1));
+//		}
 		return ret;
 	}
 	
@@ -65,10 +74,86 @@ public class IREngine {
 		}
 		return ret;
 	}
+	public static int bytesToInt2(byte[] src, int offset) {  
+		 int value;    
+		    value = (int) ((src[offset] & 0xFF)   
+		            | ((src[offset+1] & 0xFF)<<8)   
+		            | ((src[offset+2] & 0xFF)<<16)   
+		            | ((src[offset+3] & 0xFF)<<24));  
+		    return value;  
+	}  
 	
-	public static void main(String[] args) {
-		init("deploy/");
+	public static double getDouble(byte[] b, int index) { 
+	    long l; 
+	    l = b[0+index]; 
+	    l &= 0xff; 
+	    l |= ((long) b[1+index] << 8); 
+	    l &= 0xffff; 
+	    l |= ((long) b[2+index] << 16); 
+	    l &= 0xffffff; 
+	    l |= ((long) b[3+index] << 24); 
+	    l &= 0xffffffffl; 
+	    l |= ((long) b[4+index] << 32); 
+	    l &= 0xffffffffffl; 
+	    l |= ((long) b[5+index] << 40); 
+	    l &= 0xffffffffffffl; 
+	    l |= ((long) b[6+index] << 48); 
+	    l &= 0xffffffffffffffl; 
+	    l |= ((long) b[7+index] << 56); 
+	    return Double.longBitsToDouble(l); 
+	} 
+	
+	
+	private static void loadDocVecs(String datapath) throws FileNotFoundException {
+		DataInputStream in = new DataInputStream(new FileInputStream(datapath));
 		
+		try {
+			byte[] bb = new byte[100000];
+			while (true) {
+				int ret = in.read(bb, 0, 4);
+				if (ret == -1) break;
+				int size = bytesToInt2(bb, 0);
+				
+				in.read(bb, 0, 4);
+				int docid = bytesToInt2(bb, 0);
+				//System.out.print(docid+"\n");
+//				if (ret > 0) break;
+				int count = (size - 4) / 12;
+				in.read(bb, 0, size-4);
+				HashMap<Integer, Double> tmp = new HashMap<Integer, Double>();
+				for (int i = 0; i < count; i++) {
+					//in.read(bb, 0, 4);
+					int tid = bytesToInt2(bb, 12*i);
+//					System.out.print(tid+"\n");
+					//in.read(bb, 0, 8);
+					double tfidf = getDouble(bb, 12*i+4);
+					tmp.put(tid, tfidf);
+//					System.out.print(tfidf+"\n");
+				}
+				docVecs.add(tmp);
+//				break;
+			}
+		} catch (IOException e) {
+				// TODO Auto-generated catch block
+				
+		}
+		finally {
+			System.out.print("end");
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+	}
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		System.out.print("zz");
+		init("deploy/");
+		System.out.print("zz1");
 		Scanner in = new Scanner(System.in);
 		while (in.hasNext()) {
 			ArrayList<String> terms = new ArrayList<String>();

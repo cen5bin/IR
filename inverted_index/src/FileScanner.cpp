@@ -2,8 +2,8 @@
 #include "IRDefine.h"
 #include "StatisticInfo.h"
 
-#define MAX_LINE_LEN 10000
-#define MAX_TERM_LEN 200
+#define MAX_LINE_LEN 100000
+//#define MAX_TERM_LEN 200
 
 #define MAX_DICTIONARY_SIZE 5000000
 
@@ -77,7 +77,7 @@ bool FileScanner::scanFile(const char *filename)
 		{
 			if (s[i] == TERM_SPLIT_SYMBOL) 
 			{
-				if (cnt)
+				if (cnt && cnt < 100)
 				{
 					tmp[cnt] = '\0';
 					if (!m_sj->judge(tmp, cnt) && tmp[0] != ' ' && tmp[0] != '\n' && tmp[0] != '\r' && tmp[cnt-1] != '\r' && tmp[cnt-1] != '\n')

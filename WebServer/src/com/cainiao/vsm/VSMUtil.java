@@ -8,6 +8,11 @@ import java.util.Map.Entry;
 
 public class VSMUtil {
 	
+	private static double argRef = 0.5;
+	private static double argTitle = 0.1;
+	private static double argHot = 0.15;
+	private static double argVec = 0.25;
+	
 	public static double calculateIDF(int N, int df)
 	{
 		double factor = df/N;
@@ -31,5 +36,12 @@ public class VSMUtil {
 		return sum / doc.getDocLength();
 	}
 	
+	public static double calculateDocScore(VSMDoc doc)
+	{		
+		double score = argRef * doc.getRef() + argTitle * doc.getTitleScore() + 
+				      argHot * doc.getHot() + argVec * doc.getVectorScore();
+		
+		return score;
+	}
 
 }

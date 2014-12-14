@@ -1,4 +1,3 @@
-<%@page import="com.cainiao.ir.UrlMap"%>
 <%@page import="com.cainiao.entity.News"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
@@ -38,7 +37,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="result-head result-head-label">菜鸟搜索</div>
 	<div class="col-lg-6 result-head">
     <div class="input-group">
-      <input type="text" class="form-control query-input" name="content" id="content" oninput="getlist()"  value="<%
+      <input type="text" class="form-control query-input" name="content" value="<%
       String content = request.getParameter("content"); 
       content = new String(content.getBytes("ISO8859-1"),"UTF-8");
       out.print(content);
@@ -47,8 +46,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <button class="btn btn-default searchbtn btn-primary" type="submit">Go!</button>
       </span>
     </div><!-- /input-group -->
-    <div id="search-list1">  asd</div>
-    
   </div><!-- /.col-lg-6 -->
   </div>
 
@@ -57,12 +54,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>
 <div id="container" class="container_l">
 <div id="content_right" class="cr-offset">
-<font style=" font-weight:bold" face="verdana" size="3">友情链接</font>
+<font style=" font-weight:bold" face="verdana" size="3">其他人还搜</font>
 <br/>
-<a style="line-height: 30px;" href="www.google.com" >谷歌</a><br/>
-<a style="line-height: 30px;" href="www.baidu.com" >百度</a><br/>
-<a style="line-height: 30px;"href="www.bing.com" >bing</a><br/>
-<!-- <a style="line-height: 30px;" href="" >St Augustine’s 精神病院</a> -->
+<a style="line-height: 30px;" href="" >It's just that it's delicate</a><br/>
+<a style="line-height: 30px;" href="" >为什么日记要有题目</a><br/>
+<a style="line-height: 30px;"href="" >千禧年事件</a><br/>
+<a style="line-height: 30px;" href="" >St Augustine’s 精神病院</a>
 </div>
 <div id="content_left">
 
@@ -114,9 +111,8 @@ ArrayList<News> ret = (ArrayList<News>)session.getAttribute("results");
 <!-- 		</a> -->
 		<%=item.time %> 
 		&nbsp;&nbsp;
-		<a class="web-cached" href="<%="/snap/"+UrlMap.locate(item.url) %>">网页快照</a>
-	&nbsp;&nbsp;<a class="web-cached" 
-	onclick="getrelated('<%=clusterInfo.get(item.getId()) %>')">相关文档</a>
+		<a class="web-cached" href="WebCached?docid=<% %>">网页快照</a>
+	&nbsp;&nbsp;<a class="web-cached" href="WebCached?docid=<% %>">相关文档</a>
 	</p>
 </div>
 <%} %>
@@ -168,93 +164,5 @@ ArrayList<News> ret = (ArrayList<News>)session.getAttribute("results");
   </ul>
 </nav>
 </div>
-<!-- <input id="srhBtn" type="button" value="ssss"> -->
-<!-- <script> -->
-
-<script type="text/javascript">
-var tmp = 0;
-var getlist = function(){
-
-	var dd  = document.getElementById("content");
-	
-	
-	htmlobj=$.ajax(
-			{ 
-			  type:"POST",
-			  url: "./AutoCompletion",
-			  asyn:true,
-			  context: document.body,
-			  data:"content=" + dd.value,
-			  success: function(data){
-				 // alert(data);
-				//alert($("#content").attr("value"));
-				 if (data == "") $("#search-list1").css("display", "none");
-				 else {
-				  $("#search-list1").css("display", "block");
-				  $("#search-list1").html("");// = "";
-				  $("#search-list1").html(data);
-// 				  $("#search-list").append($(data));
-// 				  $("#search-list").innerHTML = data;
-				 }
-		      	}
-			});
-	
-	
-}
-
-var insert = function(s) {
-	
-	$("#content").val(s); 
-	$("#search-list").css("display", "none");
-};
-var getrelated = function(cluster) {
-	var param = "param="+$("#cluster"+cluster).attr("value")+"&page=1&content="+$("content").attr("value");
-	
-	var form=$("<form method='post' > </form>")
-	form.attr({"action":"./RelatedDocs"});
-	var input=$("<input type='hidden'>");
-	input.attr({"name":"param"});
-	input.val($("#cluster"+cluster).attr("value"));
-	form.append(input);
-	
-	input=$("<input type='hidden'>");
-	input.attr({"name":"content"});
-	input.val($("#content").attr("value"));
-	form.append(input);
-	
-	input=$("<input type='hidden'>");
-	input.attr({"name":"page"});
-	input.val(1);
-	form.append(input);
-	
-	form.submit();
-	
-			
-}
-$(document).ready( function(){
-	//alert("hello")
-	var arr=[1,2,3,4,5,6];
-	var strarr =JSON.stringify(arr);
-	//alert("param="+strarr);
-	param = "param="+strarr;
-	
-	
-	
-	$("#srhBtn").click( function(){
-		alert("hell0");
-		htmlobj=$.ajax(
-		{ 
-		  type:"POST",
-		  url: "./Test1",
-		  asyn:false,
-		  context: document.body,
-		  data:param,
-		  success: function(data){
-	      	}
-		});
-		
-	});
-}); 	
-</script>
   </body>
 </html>
